@@ -1,8 +1,21 @@
 {
   "version": 2,
-  "dgSpecHash": "9u0o+KRhyDPyYY0XeEZNbYEU1G5M4Mt+un8Vph5U3zJFdFTFBGkoyg+z9UnCYHAeqzz87eAeNtpRZ/BUcNoQog==",
+  "dgSpecHash": "S3/ycf6RoZTvYdZtxDb4nR7s7ZeEiqLy6Gj6sMnestAY1LmK0jC/ch+CRCsKlmadAd2UMk9Nt1pA2wbMx14wgA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Андрей\\Desktop\\chess2.0\\chess2.0\\server\\server.csproj",
-  "expectedPackageFiles": [],
-  "logs": []
+  "expectedPackageFiles": [
+    "C:\\Users\\Андрей\\.nuget\\packages\\websocketsharp\\1.0.3-rc11\\websocketsharp.1.0.3-rc11.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'WebSocketSharp 1.0.3-rc11' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "WebSocketSharp",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    }
+  ]
 }

@@ -1,8 +1,8 @@
 {
   "Version": 1,
-  "Hash": "Lhn5tgzJecsvgl3lTWONxpgZjpFg5dcWN9h9imDVjG4=",
-  "Source": "chess2.0",
-  "BasePath": "_content/chess2.0",
+  "Hash": "wHmTdzQjOI+52yc/ssik8jb3aBon0KdSXd8S7aZ3iSw=",
+  "Source": "server",
+  "BasePath": "_content/server",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
