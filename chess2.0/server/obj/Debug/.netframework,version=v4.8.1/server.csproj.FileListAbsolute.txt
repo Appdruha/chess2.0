@@ -1,0 +1,5 @@
+C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\obj\Debug\.netframework,version=v4.8.1\server.csproj.AssemblyReference.cache
+C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\obj\Debug\.netframework,version=v4.8.1\server.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\obj\Debug\.netframework,version=v4.8.1\server.AssemblyInfoInputs.cache
+C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\obj\Debug\.netframework,version=v4.8.1\server.AssemblyInfo.cs
+C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\obj\Debug\.netframework,version=v4.8.1\server.csproj.CoreCompileInputs.cache

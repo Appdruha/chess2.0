@@ -5,7 +5,6 @@ C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\bin\Debug\net7.0\server.d
 C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\bin\Debug\net7.0\server.runtimeconfig.json
 C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\bin\Debug\net7.0\server.dll
 C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\bin\Debug\net7.0\server.pdb
-C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\bin\Debug\net7.0\websocket-sharp.dll
 C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\obj\Debug\net7.0\server.csproj.AssemblyReference.cache
 C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\obj\Debug\net7.0\server.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\obj\Debug\net7.0\server.AssemblyInfoInputs.cache
@@ -26,3 +25,5 @@ C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\obj\Debug\net7.0\refint\s
 C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\obj\Debug\net7.0\server.pdb
 C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\obj\Debug\net7.0\server.genruntimeconfig.cache
 C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\obj\Debug\net7.0\ref\server.dll
+C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\bin\Debug\net7.0\Fleck.dll
+C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\bin\Debug\net7.0\Newtonsoft.Json.dll

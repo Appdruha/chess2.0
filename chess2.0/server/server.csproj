@@ -7,12 +7,14 @@
         <RootNamespace>chess2._0</RootNamespace>
     </PropertyGroup>
 
-    <ItemGroup>
-      <Folder Include="controller\" />
-    </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />
+      <PackageReference Include="Fleck" Version="1.2.0" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
+
+
+
+
 
 </Project>
