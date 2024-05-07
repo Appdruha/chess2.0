@@ -22,6 +22,11 @@ public class Cell
         _figure = null;
     }
 
+    public static Cell? GetCellById(List<Cell> cells, string id)
+    {
+        return cells.Find(cell => cell.Id == id);
+    }
+
     public Figure? Figure
     {
         get { return _figure; }
@@ -32,7 +37,7 @@ public class Cell
         if (figure != null)
         {
             _figure = figure;
-            _figure.Cell = this;
+            _figure.CellId = Id;
         }
         else
         {

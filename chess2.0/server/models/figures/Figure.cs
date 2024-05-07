@@ -17,13 +17,13 @@ public enum FigureNames
 public class Figure
 {
     public FigureColors Color;
-    public Cell Cell;
+    public string CellId;
     public FigureNames Name;
 
     public Figure(FigureColors color, Cell cell, FigureNames name)
     {
         Color = color;
-        Cell = cell;
+        CellId = cell.Id;
         Name = name;
     }
     

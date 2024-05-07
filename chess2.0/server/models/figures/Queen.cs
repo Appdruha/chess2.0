@@ -9,15 +9,16 @@ public class Queen : Figure
         {
             return false;
         }
-        if (Cell.IsEmptyVertical(target, cells))
+        var cell = Cell.GetCellById(cells, CellId)!;
+        if (cell.IsEmptyVertical(target, cells))
         {
             return true;
         }
-        if (Cell.IsEmptyHorizontal(target, cells))
+        if (cell.IsEmptyHorizontal(target, cells))
         {
             return true;
         }
-        if (Cell.IsEmptyDiagonal(target, cells))
+        if (cell.IsEmptyDiagonal(target, cells))
         {
             return true;
         }

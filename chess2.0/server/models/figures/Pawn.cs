@@ -13,16 +13,17 @@ public class Pawn : Figure
 
         int direction = Color == FigureColors.WHITE ? -1 : 1;
         int firstStepDirection = Color == FigureColors.WHITE ? -2 : 2;
+        var cell = Cell.GetCellById(cells, CellId)!;
 
-        if ((target.Y == Cell.Y + direction || IsFirstStep
-                && (target.Y == Cell.Y + firstStepDirection))
-            && target.X == Cell.X && target.Figure == null && Cell.IsEmptyVertical(target, cells))
+        if ((target.Y == cell.Y + direction || IsFirstStep
+                && (target.Y == cell.Y + firstStepDirection))
+            && target.X == cell.X && target.Figure == null && cell.IsEmptyVertical(target, cells))
         {
             return true;
         }
 
-        if (target.Y == Cell.Y + direction
-            && (target.X == Cell.X + 1 || target.X == Cell.X - 1)
+        if (target.Y == cell.Y + direction
+            && (target.X == cell.X + 1 || target.X == cell.X - 1)
             && target.Figure != null)
         {
             return true;

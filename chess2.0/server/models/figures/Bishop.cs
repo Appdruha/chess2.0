@@ -10,6 +10,6 @@ public class Bishop : Figure
             return false;
         }
 
-        return Cell.IsEmptyDiagonal(target, cells);
+        return Cell.GetCellById(cells, CellId)!.IsEmptyDiagonal(target, cells);
     }
 }

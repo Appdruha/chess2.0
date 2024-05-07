@@ -9,9 +9,10 @@ public class Knight : Figure
         {
             return false;
         }
-
-        int dx = Math.Abs(Cell.X - target.X);
-        int dy = Math.Abs(Cell.Y - target.Y);
+        
+        var cell = Cell.GetCellById(cells, CellId)!;
+        int dx = Math.Abs(cell.X - target.X);
+        int dy = Math.Abs(cell.Y - target.Y);
 
         return (dx == 1 && dy == 2) || (dx == 2 && dy == 1);
     }

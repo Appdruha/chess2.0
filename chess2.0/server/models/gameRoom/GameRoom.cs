@@ -13,12 +13,21 @@ public class GameRoom
         ChessBoardState = ChessBoard.InitCells();
     }
     
-    public void JoinGameRoom(IWebSocketConnection connection)
+    public GameRoom? JoinGameRoom(IWebSocketConnection connection)
     {
-        var chessBoard = ChessBoardState;
+        if (Players.Count == 2)
+        {
+            return null;
+        }
         Players.Add(new Player(FigureColors.BLACK, connection));
+        return this;
+    }
+    
+    public GameRoom StartGame()
+    {
         ChessBoardState = ChessBoard.InitFigures(ChessBoardState);
-        return;
+        Turn = FigureColors.WHITE;
+        return this;
     }
 }
 

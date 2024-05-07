@@ -28,25 +28,26 @@ public class King : Figure
         {
             return false;
         }
-
-        var dx = Math.Abs(Cell.X - target.X);
-        var dy = Math.Abs(Cell.Y - target.Y);
-        if (Cell.IsEmptyVertical(target, cells) && dy == 1)
+        
+        var cell = Cell.GetCellById(cells, CellId)!;
+        var dx = Math.Abs(cell.X - target.X);
+        var dy = Math.Abs(cell.Y - target.Y);
+        if (cell.IsEmptyVertical(target, cells) && dy == 1)
         {
             return true;
         }
 
-        if (Cell.IsEmptyHorizontal(target, cells) && dx == 1)
+        if (cell.IsEmptyHorizontal(target, cells) && dx == 1)
         {
             return true;
         }
 
-        if (Cell.IsEmptyDiagonal(target, cells) && dy == 1 && dx == 1)
+        if (cell.IsEmptyDiagonal(target, cells) && dy == 1 && dx == 1)
         {
             return true;
         }
 
-        if (IsMyTurn && IsFirstStep && Cell.IsUnderAttack(cells, Color) == null && Cell.IsEmptyHorizontal(target, cells))
+        if (IsMyTurn && IsFirstStep && cell.IsUnderAttack(cells, Color) == null && cell.IsEmptyHorizontal(target, cells))
         {
             bool Castling(Cell rookCell, int dx)
             {

@@ -10,7 +10,8 @@ public class Rook : Figure
         {
             return false;
         }
+        var cell = Cell.GetCellById(cells, CellId)!;
 
-        return Cell.IsEmptyVertical(target, cells) || Cell.IsEmptyHorizontal(target, cells);
+        return cell.IsEmptyVertical(target, cells) || cell.IsEmptyHorizontal(target, cells);
     }
 }

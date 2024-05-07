@@ -32,13 +32,36 @@ server.Start(ws =>
                     ws.Send(messageForClient);
                     break;
                 }
+                case MessageType.Join:
+                {
+                    var messageForClient = Controller.JoinRoom(ws, roomId);
+                    ws.Send(messageForClient);
+                    break;
+                }
+                case MessageType.Start:
+                {
+                    var (players, messageForClient) = Controller.Start(roomId);
+                    WSActions.Broadcast(players, messageForClient);
+                    break;
+                }
             }
         }
-        catch
+        catch(Exception e)
         {
-            ws.Send("error");
+            ws.Send(e.ToString());
         }
     };
 });
 
 WebApplication.CreateBuilder(args).Build().Run();
+
+public class WSActions
+{
+    public static void Broadcast(List<Player> players, string message)
+    {
+        foreach (var player in players)
+        {
+            player.Connection.Send(message);
+        }
+    }
+}

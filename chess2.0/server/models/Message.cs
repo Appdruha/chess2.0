@@ -16,6 +16,7 @@ public enum MessageType
 {
     Create,
     Join,
+    Start,
     Leave,
     Move,
     EndGame,

@@ -12,5 +12,15 @@ public class Db
         return gameRoomState;
     }
     
+    public static GameRoom? JoinRoom(string roomId, IWebSocketConnection client)
+    {
+        var gameRoomState = _rooms[roomId].JoinGameRoom(client);
+        return gameRoomState;
+    }
     
+    public static GameRoom StartGame(string roomId)
+    {
+        var gameRoomState = _rooms[roomId].StartGame();
+        return gameRoomState;
+    }
 }
