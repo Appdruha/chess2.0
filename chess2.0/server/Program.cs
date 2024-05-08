@@ -38,6 +38,12 @@ server.Start(ws =>
                     ws.Send(messageForClient);
                     break;
                 }
+                case MessageType.Init:
+                {
+                    var messageForClient = Controller.Init(roomId);
+                    ws.Send(messageForClient);
+                    break;
+                }
                 case MessageType.Start:
                 {
                     var (players, messageForClient) = Controller.Start(roomId);

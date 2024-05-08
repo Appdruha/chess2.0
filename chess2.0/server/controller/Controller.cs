@@ -6,10 +6,10 @@ public class Controller
     public static string CreateRoom(IWebSocketConnection client)
     {
         var roomId = Guid.NewGuid().ToString();
-        var gameRoom = Db.CreateRoom(roomId, client);
-        return CreateJsonMessage(MessageType.Create, gameRoom, roomId);
+        Db.CreateRoom(roomId, client);
+        return CreateJsonMessage(MessageType.Create, null, roomId);
     }
-    
+
     public static string JoinRoom(IWebSocketConnection client, string roomId)
     {
         var gameRoom = Db.JoinRoom(roomId, client);
@@ -17,9 +17,16 @@ public class Controller
         {
             return CreateJsonMessage(MessageType.Error, gameRoom, roomId);
         }
-        return CreateJsonMessage(MessageType.Join, gameRoom, roomId);
+
+        return CreateJsonMessage(MessageType.Join, null, roomId);
     }
-    
+
+    public static string Init(string roomId)
+    {
+        var gameRoom = Db.GetRoomState(roomId);
+        return CreateJsonMessage(MessageType.Init, gameRoom, roomId);
+    }
+
     public static (List<Player>, string) Start(string roomId)
     {
         var gameRoom = Db.StartGame(roomId);
@@ -28,12 +35,12 @@ public class Controller
 
     private static string CreateJsonMessage(MessageType type, GameRoom? gameRoom, string roomId)
     {
-        if (gameRoom == null)
+        GameRoomDto? gameRoomDto = null;
+        if (gameRoom != null)
         {
-            var errorMessage = new Message(type, null, roomId);
-            return JsonConvert.SerializeObject(errorMessage);
+            gameRoomDto = new GameRoomDto(gameRoom);
         }
-        var gameRoomDto = new GameRoomDto(gameRoom);
+
         var message = new Message(type, gameRoomDto, roomId);
         return JsonConvert.SerializeObject(message);
     }

@@ -1,4 +1,5 @@
 using Fleck;
+using Newtonsoft.Json;
 
 public class GameRoom
 {
@@ -12,17 +13,18 @@ public class GameRoom
         Players.Add(new Player(FigureColors.WHITE, connection));
         ChessBoardState = ChessBoard.InitCells();
     }
-    
+
     public GameRoom? JoinGameRoom(IWebSocketConnection connection)
     {
         if (Players.Count == 2)
         {
             return null;
         }
+
         Players.Add(new Player(FigureColors.BLACK, connection));
         return this;
     }
-    
+
     public GameRoom StartGame()
     {
         ChessBoardState = ChessBoard.InitFigures(ChessBoardState);
@@ -33,14 +35,14 @@ public class GameRoom
 
 public class GameRoomDto
 {
+    [JsonProperty("chessBoardState")] 
     public List<Cell> ChessBoardState { get; set; }
-    public KingAttacker? KingAttacker { get; set; }
+    [JsonProperty("turn")] 
     public FigureColors? Turn { get; set; }
-    
+
     public GameRoomDto(GameRoom gameRoom)
     {
         ChessBoardState = gameRoom.ChessBoardState;
-        KingAttacker = gameRoom.KingAttacker;
         Turn = gameRoom.Turn;
     }
 }
