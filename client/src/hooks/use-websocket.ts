@@ -2,9 +2,9 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { Message, MessageParams, MessageType } from '../models/Message.ts'
 
 interface UseWebsocket {
-  webSocket: WebSocket
+  webSocketState: {webSocket: WebSocket, isConnected: boolean}
   roomId?: string
-  onOpen?: () => void
+  onOpenMessage?: Message
   onClose?: () => void
   onError?: () => void
 }
@@ -24,44 +24,49 @@ const messageConstructor = (type: MessageType, params: MessageParams | null, roo
 
 export const useWebsocket = (
   {
-    webSocket,
-    roomId,
-    onOpen = () => defaultCallback('socket opened'),
+    webSocketState,
+    onOpenMessage,
     onError = () => defaultCallback('socket error'),
     onClose = () => defaultCallback('socket closed'),
-  }: UseWebsocket): [null | Omit<Message, 'type'>, Dispatch<SetStateAction<Omit<Message, "type"> | null>>] => {
+  }: UseWebsocket): [null | Omit<Message, 'type'>, Dispatch<SetStateAction<Message | null>>] => {
+  const {webSocket, isConnected} = webSocketState
+
   const [lastMessage, setLastMessage] = useState<null | Omit<Message, 'type'>>(null)
-  const [messageToServer, sendMessage] = useState<null | Omit<Message, 'type'>>(null)
-  const [isConnected, setIsConnected] = useState(false)
+  const [messageToServer, sendMessage] = useState<null | Message>(null)
 
   useEffect(() => {
-    if (isConnected) {
-      if (roomId) {
-        webSocket.send(messageConstructor(MessageType.join, null, roomId))
-      }
-      webSocket.send(messageConstructor(MessageType.create, null, ''))
+    if (isConnected && messageToServer) {
+      const { type, params, roomId } = messageToServer
+      webSocket.send(messageConstructor(type, params, roomId))
     }
-  }, [roomId, isConnected])
+  }, [messageToServer])
 
   try {
     webSocket.onopen = () => {
-      setIsConnected(true)
-      onOpen()
+      webSocketState.isConnected = true
+      if (onOpenMessage) {
+        webSocket.send(JSON.stringify(onOpenMessage))
+      }
+      console.log('socket connected')
     }
     webSocket.onclose = () => {
-      setIsConnected(false)
+      webSocketState.isConnected = false
       setLastMessage(null)
       onClose()
     }
     webSocket.onerror = () => {
-      setIsConnected(false)
+      webSocketState.isConnected = false
       setLastMessage(null)
       onError()
     }
     webSocket.onmessage = (event) => {
       const { params, roomId, type } = JSON.parse(event.data) as Message
       const newMessage = { params, roomId }
-      if (type === MessageType.create || type === MessageType.join || type === MessageType.move || type === MessageType.start) {
+      if (type === MessageType.create
+        || type === MessageType.join
+        || type === MessageType.init
+        || type === MessageType.move
+        || type === MessageType.start) {
         setLastMessage(newMessage)
       }
     }

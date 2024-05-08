@@ -4,6 +4,7 @@ import { FigureColors } from './Figure.ts'
 export enum MessageType {
   create,
   join,
+  init,
   start,
   leave,
   move,
