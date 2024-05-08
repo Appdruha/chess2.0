@@ -1,0 +1,12 @@
+.container {
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 1200px;
+    min-height: 100vh;
+}
+
+.main {
+    width: 100%;
+}
