@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 public enum FigureColors
 {
     BLACK,
@@ -16,8 +18,11 @@ public enum FigureNames
 
 public class Figure
 {
+    [JsonProperty("color")]
     public FigureColors Color;
+    [JsonProperty("cellId")]
     public string CellId;
+    [JsonProperty("name")]
     public FigureNames Name;
 
     public Figure(FigureColors color, Cell cell, FigureNames name)

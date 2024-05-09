@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 public enum CellCollors
 {
     BLACK,
@@ -7,9 +9,13 @@ public enum CellCollors
 
 public class Cell
 {
+    [JsonProperty("x")]
     public int X { get; }
+    [JsonProperty("y")]
     public int Y { get; }
+    [JsonProperty("color")]
     public CellCollors Color { get; }
+    [JsonProperty("id")]
     public string Id { get; }
     private Figure? _figure;
 
@@ -26,7 +32,8 @@ public class Cell
     {
         return cells.Find(cell => cell.Id == id);
     }
-
+    
+    [JsonProperty("figure")]
     public Figure? Figure
     {
         get { return _figure; }
