@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { Message, MessageParams, MessageType } from '../models/Message.ts'
+import { MessageFromServer, MessageToServer, MessageType } from '../models/Message.ts'
 
 interface UseWebsocket {
   webSocketState: {webSocket: WebSocket, isConnected: boolean}
-  onOpenMessage?: Message
+  onOpenMessage?: MessageToServer
   onClose?: () => void
   onError?: () => void
 }
@@ -12,8 +12,8 @@ const defaultCallback = (message: string) => {
   console.log(message)
 }
 
-const messageConstructor = (type: MessageType, params: MessageParams | null, roomId: string) => {
-  const newMessage: Message = {
+const messageConstructor = (type: MessageType, params: string, roomId: string) => {
+  const newMessage: MessageToServer = {
     type,
     params,
     roomId,
@@ -27,11 +27,11 @@ export const useWebsocket = (
     onOpenMessage,
     onError = () => defaultCallback('socket error'),
     onClose = () => defaultCallback('socket closed'),
-  }: UseWebsocket): [null | Omit<Message, 'type'>, Dispatch<SetStateAction<Message | null>>] => {
+  }: UseWebsocket): [null | Omit<MessageFromServer, 'type'>, Dispatch<SetStateAction<MessageToServer | null>>] => {
   const {webSocket, isConnected} = webSocketState
 
-  const [lastMessage, setLastMessage] = useState<null | Omit<Message, 'type'>>(null)
-  const [messageToServer, sendMessage] = useState<null | Message>(null)
+  const [lastMessage, setLastMessage] = useState<null | Omit<MessageFromServer, 'type'>>(null)
+  const [messageToServer, sendMessage] = useState<null | MessageToServer>(null)
 
   useEffect(() => {
     if (isConnected && messageToServer) {
@@ -59,12 +59,12 @@ export const useWebsocket = (
       onError()
     }
     webSocket.onmessage = (event) => {
-      const { params, roomId, type } = JSON.parse(event.data) as Message
+      const { params, roomId, type } = JSON.parse(event.data) as MessageFromServer
       const newMessage = { params, roomId }
       if (type === MessageType.create
         || type === MessageType.join
         || type === MessageType.init
-        || type === MessageType.move
+        || type === MessageType.nextTurn
         || type === MessageType.start) {
         setLastMessage(newMessage)
       }
