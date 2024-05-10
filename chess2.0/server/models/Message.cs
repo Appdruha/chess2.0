@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-public class Message
+public class MessageToClient
 {
     [JsonProperty("type")]
     public MessageType Type;
@@ -9,12 +9,22 @@ public class Message
     [JsonProperty("roomId")]
     public string RoomId;
 
-    public Message(MessageType type, GameRoomDto? messParams, string roomId)
+    public MessageToClient(MessageType type, GameRoomDto? messParams, string roomId)
     {
         Type = type;
         Params = messParams;
         RoomId = roomId;
     }
+}
+
+public class MessageFromClient
+{
+    [JsonProperty("type")]
+    public MessageType Type;
+    [JsonProperty("params")]
+    public string Params;
+    [JsonProperty("roomId")]
+    public string RoomId;
 }
 
 public enum MessageType
@@ -25,6 +35,7 @@ public enum MessageType
     Start,
     Leave,
     Move,
+    NextTurn,
     EndGame,
     ChangeFigure,
     Restart,

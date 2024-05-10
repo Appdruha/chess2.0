@@ -4,7 +4,7 @@ public class Rook : Figure
 
     public Rook(FigureColors color, Cell cell) : base(color, cell, FigureNames.ROOK) {}
 
-    public new bool CanMove(Cell target, List<Cell> cells, KingAttacker? kingAttacker)
+    public override bool CanMove(Cell target, List<Cell> cells, KingAttacker? kingAttacker)
     {
         if (!base.CanMove(target, null, kingAttacker))
         {

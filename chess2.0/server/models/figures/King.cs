@@ -1,17 +1,16 @@
 public class King : Figure
 {
     public bool IsFirstStep { get; set; } = true;
-    public (string From, string To)? RookCastling { get; set; }
     public bool IsMyTurn { get; set; }
 
     public King(FigureColors color, Cell cell) : base(color, cell, FigureNames.KING)
     {
-        IsMyTurn = false;
+        IsMyTurn = true;
     }
 
-    public bool CanMove(Cell target, List<Cell> cells, KingAttacker? kingAttacker)
+    public override bool CanMove(Cell target, List<Cell> cells, KingAttacker? kingAttacker)
     {
-        if (IsMyTurn)
+        if (Color == FigureColors.BLACK)
         {
             var figure = target.Figure;
             target.SetFigure(null);
@@ -23,7 +22,7 @@ public class King : Figure
 
             target.SetFigure(figure);
         }
-
+        
         if (!base.CanMove(target, cells, kingAttacker))
         {
             return false;
@@ -32,34 +31,35 @@ public class King : Figure
         var cell = Cell.GetCellById(cells, CellId)!;
         var dx = Math.Abs(cell.X - target.X);
         var dy = Math.Abs(cell.Y - target.Y);
-        if (cell.IsEmptyVertical(target, cells) && dy == 1)
+        if (dy == 1 && cell.IsEmptyVertical(target, cells))
         {
             return true;
         }
-
-        if (cell.IsEmptyHorizontal(target, cells) && dx == 1)
+        
+        if (dx == 1 && cell.IsEmptyHorizontal(target, cells))
         {
             return true;
         }
-
-        if (cell.IsEmptyDiagonal(target, cells) && dy == 1 && dx == 1)
+        
+        if (dx == 1 && dy == 1 && cell.IsEmptyDiagonal(target, cells))
         {
             return true;
         }
-
-        if (IsMyTurn && IsFirstStep && cell.IsUnderAttack(cells, Color) == null && cell.IsEmptyHorizontal(target, cells))
+        
+        if (Color == FigureColors.BLACK && IsFirstStep && cell.IsUnderAttack(cells, Color) == null && cell.IsEmptyHorizontal(target, cells))
         {
-            bool Castling(Cell rookCell, int dx)
+            bool Castling(Cell rookCell, int rookDx)
             {
                 if (rookCell.Figure != null && rookCell.Figure.Name == FigureNames.ROOK)
                 {
                     var rook = (Rook)rookCell.Figure;
-                    var newRookCell = cells.FirstOrDefault(cell => cell.X == target.X - dx && cell.Y == target.Y);
+                    var newRookCell = cells.Find(cell => cell.X == target.X - rookDx && cell.Y == target.Y);
                     if (newRookCell != null && newRookCell.IsUnderAttack(cells, Color) == null && rook.IsFirstStep &&
                         rook.CanMove(target, cells, null))
                     {
                         rook.IsFirstStep = false;
-                        RookCastling = (rookCell.Id, newRookCell.Id);
+                        rookCell.SetFigure(null);
+                        newRookCell.SetFigure(rook);
                         return true;
                     }
 
@@ -69,17 +69,19 @@ public class King : Figure
                 return false;
             }
 
-            var rookCell = cells.FirstOrDefault(cell => cell.X == target.X + 1 && cell.Y == target.Y);
+            var rookCell = cells.Find(cell => cell.X == target.X + 1 && cell.Y == target.Y);
             if (rookCell != null && Castling(rookCell, 1))
             {
                 return true;
             }
 
-            rookCell = cells.FirstOrDefault(cell => cell.X == target.X - 2 && cell.Y == target.Y);
+            rookCell = cells.Find(cell => cell.X == target.X - 2 && cell.Y == target.Y);
             if (rookCell != null && Castling(rookCell, -1))
             {
                 return true;
             }
+
+            return false;
         }
 
         return false;

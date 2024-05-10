@@ -61,8 +61,10 @@ public class Cell
 
         int min = Math.Min(Y, target.Y);
         int max = Math.Max(Y, target.Y);
-        for (int yPos = min + 1; Y < max; yPos += 1)
+        
+        for (int yPos = min + 1; yPos < max; yPos += 1)
         {
+            Console.WriteLine(yPos);
             Cell? cell = cells.Find(c => c.X == target.X && c.Y == yPos);
             if (cell == null || cell.Figure != null)
             {
@@ -82,10 +84,10 @@ public class Cell
 
         int min = Math.Min(X, target.X);
         int max = Math.Max(X, target.X);
-        for (int xPos = min + 1; X < max; xPos += 1)
+        for (int xPos = min + 1; xPos < max; xPos += 1)
         {
             Cell? cell = cells.Find(c => c.Y == target.Y && c.X == xPos);
-            if (cell == null || cell._figure != null)
+            if (cell == null || cell.Figure != null)
             {
                 return false;
             }
@@ -109,7 +111,7 @@ public class Cell
         for (int i = 1; i < absY; i += 1)
         {
             Cell? cell = cells.Find(c => c.Y == Y + dy * i && c.X == X + dx * i);
-            if (cell == null || cell._figure != null)
+            if (cell == null || cell.Figure != null)
             {
                 return false;
             }
@@ -130,7 +132,7 @@ public class Cell
                 if (!(figure.Name == FigureNames.PAWN && cell.X == X))
                 {
                     if (figure.Name == FigureNames.PAWN && Y == cell.Y + (figure.Color == FigureColors.BLACK ? 1 : -1)
-                                                        && (X == cell.X || X == cell.X))
+                                                        && (X == cell.X + 1 || X == cell.X - 1))
                     {
                         return new KingAttacker(figure, new List<Cell> { cell } );
                     }

@@ -7,7 +7,7 @@ server.Start(ws =>
 {
     ws.OnOpen = () =>
     {
-        var m = new Message(MessageType.Create, null, "");
+        var m = new MessageToClient(MessageType.Create, null, "");
         Console.WriteLine(JsonConvert.SerializeObject(m));
         ws.Send("Websocket Connection open");
     };
@@ -15,7 +15,8 @@ server.Start(ws =>
     {
         try
         {
-            var message = JsonConvert.DeserializeObject<Message>(messageString);
+            Console.WriteLine(messageString);
+            var message = JsonConvert.DeserializeObject<MessageFromClient>(messageString);
             if (message == null)
             {
                 ws.Send("Incorrect message");
@@ -23,6 +24,7 @@ server.Start(ws =>
             }
 
             var type = message.Type;
+            var clientParams = message.Params;
             var roomId = message.RoomId;
             switch (type)
             {
@@ -47,6 +49,12 @@ server.Start(ws =>
                 case MessageType.Start:
                 {
                     var (players, messageForClient) = Controller.Start(roomId);
+                    WSActions.Broadcast(players, messageForClient);
+                    break;
+                }
+                case MessageType.Move:
+                {
+                    var (players, messageForClient) = Controller.Move(roomId, clientParams);
                     WSActions.Broadcast(players, messageForClient);
                     break;
                 }

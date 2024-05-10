@@ -1,6 +1,8 @@
 public class ChessBoard
 {
-    public static List<Cell> InitCells()
+    public List<Cell> ChessBoardState;
+    
+    public ChessBoard()
     {
         var cellColor = CellCollors.BLACK;
         var chessBoard = new List<Cell>();
@@ -10,7 +12,7 @@ public class ChessBoard
             for (var j = 0; j < 8; j++)
             {
                 var x = i;
-                var y = 8 - j;
+                var y = 7 - j;
                 chessBoard.Add(new Cell(x, y, cellColor, columns[i] + (j + 1).ToString()));
                 if (j != 7)
                 {
@@ -19,12 +21,12 @@ public class ChessBoard
             }
         }
 
-        return chessBoard;
+        ChessBoardState = chessBoard;
     }
 
-    public static List<Cell> InitFigures(List<Cell> cells)
+    public void InitFigures()
     {
-        foreach (var cell in cells)
+        foreach (var cell in ChessBoardState)
         {
             if (cell.Id.Contains('2'))
             {
@@ -75,7 +77,29 @@ public class ChessBoard
                 cell.SetFigure(new Knight(FigureColors.BLACK, cell));
             }
         }
+    }
 
-        return cells;
+    public void MoveFigure(string moveFigureParams)
+    {
+        string[] ids = moveFigureParams.Split(' ');
+        Cell? fromCell = null;
+        Cell? toCell = null;
+        foreach (var cell in ChessBoardState)
+        {
+            if (cell.Id == ids[0]) 
+                fromCell = cell;
+            if (cell.Id == ids[1]) 
+                toCell = cell;
+        }
+        
+        if (fromCell != null && toCell != null && fromCell.Figure != null)
+        {
+            if (fromCell.Figure.CanMove(toCell, ChessBoardState, null))
+            {
+                var figure = fromCell.Figure;
+                toCell.SetFigure(figure);
+                fromCell.SetFigure(null);
+            }
+        }
     }
 }

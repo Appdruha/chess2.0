@@ -32,7 +32,7 @@ public class Figure
         Name = name;
     }
     
-    public bool CanMove(Cell target, List<Cell>? cells, KingAttacker? kingAttacker)
+    public virtual bool CanMove(Cell target, List<Cell>? cells, KingAttacker? kingAttacker)
     {
         if (kingAttacker!= null &&!kingAttacker.IntermCells.Contains(target))
         {

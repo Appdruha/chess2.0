@@ -23,6 +23,12 @@ public class Db
         return gameRoomState;
     }
     
+    public static GameRoom ChangeRoomState(string roomId, string moveParams)
+    {
+        var gameRoomState = _rooms[roomId].MoveFigure(moveParams);
+        return gameRoomState;
+    }
+    
     public static GameRoom StartGame(string roomId)
     {
         var gameRoomState = _rooms[roomId].StartGame();

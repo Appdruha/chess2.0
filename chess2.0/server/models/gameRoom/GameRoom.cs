@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 public class GameRoom
 {
-    public List<Cell> ChessBoardState { get; set; }
+    public ChessBoard ChessBoard { get; set; }
     public KingAttacker? KingAttacker { get; set; } = null;
     public FigureColors? Turn { get; set; } = null;
     public List<Player> Players { get; } = new List<Player>();
@@ -11,7 +11,7 @@ public class GameRoom
     public GameRoom(IWebSocketConnection connection)
     {
         Players.Add(new Player(FigureColors.WHITE, connection));
-        ChessBoardState = ChessBoard.InitCells();
+        ChessBoard = new ChessBoard();
     }
 
     public GameRoom? JoinGameRoom(IWebSocketConnection connection)
@@ -27,8 +27,15 @@ public class GameRoom
 
     public GameRoom StartGame()
     {
-        ChessBoardState = ChessBoard.InitFigures(ChessBoardState);
+        ChessBoard.InitFigures();
         Turn = FigureColors.WHITE;
+        return this;
+    }
+    
+    public GameRoom MoveFigure(string moveParams)
+    {
+        ChessBoard.MoveFigure(moveParams);
+        Turn = Turn == FigureColors.WHITE ? FigureColors.BLACK : FigureColors.WHITE;
         return this;
     }
 }
@@ -42,7 +49,7 @@ public class GameRoomDto
 
     public GameRoomDto(GameRoom gameRoom)
     {
-        ChessBoardState = gameRoom.ChessBoardState;
+        ChessBoardState = gameRoom.ChessBoard.ChessBoardState;
         Turn = gameRoom.Turn;
     }
 }

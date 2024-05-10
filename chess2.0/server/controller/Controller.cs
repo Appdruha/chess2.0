@@ -32,6 +32,12 @@ public class Controller
         var gameRoom = Db.StartGame(roomId);
         return (gameRoom.Players, CreateJsonMessage(MessageType.Start, gameRoom, roomId));
     }
+    
+    public static (List<Player>, string) Move(string roomId, string moveParams)
+    {
+        var gameRoom = Db.ChangeRoomState(roomId, moveParams);
+        return (gameRoom.Players, CreateJsonMessage(MessageType.NextTurn, gameRoom, roomId));
+    }
 
     private static string CreateJsonMessage(MessageType type, GameRoom? gameRoom, string roomId)
     {
@@ -41,7 +47,7 @@ public class Controller
             gameRoomDto = new GameRoomDto(gameRoom);
         }
 
-        var message = new Message(type, gameRoomDto, roomId);
+        var message = new MessageToClient(type, gameRoomDto, roomId);
         return JsonConvert.SerializeObject(message);
     }
 }
