@@ -14,15 +14,8 @@ export enum FigureNames
   bishop,
 }
 
-export class Figure {
-  public color: FigureColors
-  public cellId: string
-  public name: FigureNames
-
-  constructor(color: FigureColors, cellId: string, name: FigureNames)
-  {
-    this.name = name
-    this.color = color
-    this.cellId = cellId
-  }
+export interface Figure {
+  color: FigureColors
+  cellId: string
+  name: FigureNames
 }

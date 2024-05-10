@@ -3,7 +3,6 @@ import { Message, MessageParams, MessageType } from '../models/Message.ts'
 
 interface UseWebsocket {
   webSocketState: {webSocket: WebSocket, isConnected: boolean}
-  roomId?: string
   onOpenMessage?: Message
   onClose?: () => void
   onError?: () => void
