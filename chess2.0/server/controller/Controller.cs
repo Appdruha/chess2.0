@@ -43,9 +43,17 @@ public class Controller
         var gameRoom = Db.ChangeRoomState(roomId, moveParams);
         var firstGameRoomData = new GameRoomDto(gameRoom, FigureColors.WHITE);
         var secondGameRoomData = new GameRoomDto(gameRoom, FigureColors.BLACK);
+        
+        if (gameRoom.IsMate)
+        {
+            return (gameRoom.Players,
+                (CreateJsonMessage(MessageType.EndGame, firstGameRoomData, roomId),
+                    CreateJsonMessage(MessageType.EndGame, secondGameRoomData, roomId)));
+        }
+        
         return (gameRoom.Players,
-            (CreateJsonMessage(MessageType.Start, firstGameRoomData, roomId),
-                CreateJsonMessage(MessageType.Start, secondGameRoomData, roomId)));
+            (CreateJsonMessage(MessageType.NextTurn, firstGameRoomData, roomId),
+                CreateJsonMessage(MessageType.NextTurn, secondGameRoomData, roomId)));
     }
 
     private static string CreateJsonMessage(MessageType type, GameRoomDto? gameRoomDto, string roomId)

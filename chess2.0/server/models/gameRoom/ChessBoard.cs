@@ -131,4 +131,50 @@ public class ChessBoard
 
         return (null, false);
     }
+
+    public bool CheckIsMate(KingAttacker? kingAttacker, FigureColors playerColor)
+    {
+        if (kingAttacker == null)
+        {
+            return false;
+        }
+        var playerFigures = ChessBoardState
+            .Where(cell => cell.Figure != null && cell.Figure.Color == playerColor)
+            .Select(cell => cell.Figure);
+        var cellToPreventCheck = kingAttacker.IntermCells.Find(cell =>
+        {
+            var result = false;
+            foreach (var figure in playerFigures)
+            {
+                if (figure.CanMove(cell, ChessBoardState, kingAttacker))
+                {
+                    result = true;
+                    return result;
+                }
+            }
+
+            return result;
+        });
+        return cellToPreventCheck == null;
+    }
 }
+
+// const playerFigures = cells.filter(cell => cell.figure && cell.figure.color === player.color)
+//     .map(cell => cell.figure) as Figure[]
+// const cellToPreventCheck = kingAttackerRef.current.intermCells.find(cell => {
+//     let result = false
+//     playerFigures.forEach(figure => {
+//         if (figure.canMove({ target: cell, cells, kingAttacker: kingAttackerRef.current })) {
+//             return result = true
+//         }
+//     })
+//     return result
+// })
+// if (!cellToPreventCheck) {
+//     const message: Message = {
+//         type: 'endGame',
+//         roomId,
+//             params: { color: player.color },
+//     }
+//     webSocket.send(JSON.stringify(message))
+// }
