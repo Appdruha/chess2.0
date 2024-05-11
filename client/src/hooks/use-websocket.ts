@@ -27,10 +27,10 @@ export const useWebsocket = (
     onOpenMessage,
     onError = () => defaultCallback('socket error'),
     onClose = () => defaultCallback('socket closed'),
-  }: UseWebsocket): [null | Omit<MessageFromServer, 'type'>, Dispatch<SetStateAction<MessageToServer | null>>] => {
+  }: UseWebsocket): [null | MessageFromServer, Dispatch<SetStateAction<MessageToServer | null>>] => {
   const {webSocket, isConnected} = webSocketState
 
-  const [lastMessage, setLastMessage] = useState<null | Omit<MessageFromServer, 'type'>>(null)
+  const [lastMessage, setLastMessage] = useState<null | MessageFromServer>(null)
   const [messageToServer, sendMessage] = useState<null | MessageToServer>(null)
 
   useEffect(() => {
@@ -60,13 +60,13 @@ export const useWebsocket = (
     }
     webSocket.onmessage = (event) => {
       const { params, roomId, type } = JSON.parse(event.data) as MessageFromServer
-      const newMessage = { params, roomId }
       if (type === MessageType.create
         || type === MessageType.join
         || type === MessageType.init
         || type === MessageType.nextTurn
+        || type === MessageType.endGame
         || type === MessageType.start) {
-        setLastMessage(newMessage)
+        setLastMessage({ params, roomId, type })
       }
     }
   } catch (e) {

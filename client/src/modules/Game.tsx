@@ -10,6 +10,7 @@ import { handleMouseMove } from './helpers/handle-mouse-move.ts'
 import { handleClick } from './helpers/handle-click.ts'
 import { chooseFigureIcon } from './helpers/choose-figure-icon.ts'
 import styles from './game.module.css'
+import { FigureColors } from '../models/Figure.ts'
 
 export const Game = () => {
   const roomId = useParams().roomId!
@@ -57,6 +58,10 @@ export const Game = () => {
     chessBoardStateRef.current = message?.params?.chessBoardState
     if (message?.params) {
       selectedFigureIconRef.current = null
+    }
+    if (message && message.type === MessageType.endGame) {
+      const color = message.params?.color
+      alert(`${color === FigureColors.black ? 'Белые' : 'Черные'} победили!`)
     }
   }, [message])
 
