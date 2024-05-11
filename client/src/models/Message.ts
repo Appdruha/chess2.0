@@ -8,6 +8,7 @@ export enum MessageType {
   start,
   leave,
   move,
+  nextTurn,
   endGame,
   changeFigure,
   restart,
@@ -19,8 +20,14 @@ export interface MessageParams {
   turn: FigureColors | null
 }
 
-export interface Message {
+export interface MessageFromServer {
   type: MessageType
   params: null | MessageParams
+  roomId: string
+}
+
+export interface MessageToServer {
+  type: MessageType
+  params: string
   roomId: string
 }

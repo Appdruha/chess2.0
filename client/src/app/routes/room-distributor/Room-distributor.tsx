@@ -12,7 +12,7 @@ export const RoomDistributor = (props: { children: ReactNode }) => {
   }
   const [message] = useWebsocket({
     webSocketState,
-    onOpenMessage: { type: roomId ? MessageType.join : MessageType.create, params: null, roomId: roomId || '' },
+    onOpenMessage: { type: roomId ? MessageType.join : MessageType.create, params: '', roomId: roomId || '' },
   })
 
   if (!message) {

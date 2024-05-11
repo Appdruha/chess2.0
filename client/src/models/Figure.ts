@@ -18,4 +18,5 @@ export interface Figure {
   color: FigureColors
   cellId: string
   name: FigureNames
+  isFirstStep?: boolean
 }
