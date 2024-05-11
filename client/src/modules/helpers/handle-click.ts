@@ -1,11 +1,12 @@
 import { Cell } from '../../models/Cell.ts'
 import { Dispatch, MutableRefObject, SetStateAction } from 'react'
-import { FigureNames } from '../../models/Figure.ts'
+import { FigureColors, FigureNames } from '../../models/Figure.ts'
 import { ChooseFigureIconArgs } from './choose-figure-icon.ts'
 import { MessageToServer } from '../../models/Message.ts'
 
 interface HandleClickArgs {
-  isMyTurn: boolean
+  isMyTurn?: boolean
+  turnColor?: FigureColors | null
   chessBoardState: Cell[] | undefined
   selectedFigureIconRef: MutableRefObject<HTMLImageElement | null>
   clientPositionOnChessBoard: { x: number, y: number } | null
@@ -26,6 +27,7 @@ const findCell = (clientPosition: { x: number, y: number }, cells: Cell[], cellS
 export const handleClick = (
   {
     isMyTurn,
+    turnColor,
     chessBoardState,
     selectedFigureIconRef,
     clientPositionOnChessBoard,
@@ -39,7 +41,7 @@ export const handleClick = (
   if (isMyTurn && chessBoardState && clientPositionOnChessBoard) {
     const targetCell = findCell(clientPositionOnChessBoard, chessBoardState, cellSideSize)
     if (targetCell) {
-      if (!selectedFigureIconRef.current && targetCell.figure) {
+      if (!selectedFigureIconRef.current && targetCell.figure && targetCell.figure.color === turnColor) {
         const icon = chooseFigureIcon({figure: targetCell.figure, figureIcons})
         if (icon) {
           selectedFigureIconRef.current = icon

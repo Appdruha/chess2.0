@@ -55,7 +55,6 @@ export const Game = () => {
 
   useEffect(() => {
     chessBoardStateRef.current = message?.params?.chessBoardState
-    console.log(chessBoardStateRef.current)
     if (message?.params) {
       selectedFigureIconRef.current = null
     }
@@ -96,7 +95,8 @@ export const Game = () => {
         })}
         onMouseOut={() => clientPositionOnChessBoardRef.current = null}
         onClick={() => handleClick({
-          isMyTurn: true,
+          isMyTurn: message?.params?.turn,
+          turnColor: message?.params?.color,
           selectedFigureIconRef,
           chessBoardState: chessBoardStateRef.current,
           chooseFigureIcon,

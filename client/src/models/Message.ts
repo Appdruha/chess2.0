@@ -17,7 +17,8 @@ export enum MessageType {
 
 export interface MessageParams {
   chessBoardState: Cell[]
-  turn: FigureColors | null
+  turn: boolean
+  color: FigureColors | null
 }
 
 export interface MessageFromServer {
