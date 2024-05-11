@@ -11,7 +11,13 @@ public class Rook : Figure
             return false;
         }
         var cell = Cell.GetCellById(cells, CellId)!;
+        
+        if (cell.IsEmptyVertical(target, cells) || cell.IsEmptyHorizontal(target, cells))
+        {
+            IsFirstStep = false;
+            return true;
+        }
 
-        return cell.IsEmptyVertical(target, cells) || cell.IsEmptyHorizontal(target, cells);
+        return false;
     }
 }

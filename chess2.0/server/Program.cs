@@ -48,14 +48,14 @@ server.Start(ws =>
                 }
                 case MessageType.Start:
                 {
-                    var (players, messageForClient) = Controller.Start(roomId);
-                    WSActions.Broadcast(players, messageForClient);
+                    var (players, messagesForClients) = Controller.Start(roomId);
+                    WSActions.BroadcastByColor(players, messagesForClients);
                     break;
                 }
                 case MessageType.Move:
                 {
-                    var (players, messageForClient) = Controller.Move(roomId, clientParams);
-                    WSActions.Broadcast(players, messageForClient);
+                    var (players, messagesForClients) = Controller.Move(roomId, clientParams);
+                    WSActions.BroadcastByColor(players, messagesForClients);
                     break;
                 }
             }
@@ -71,11 +71,18 @@ WebApplication.CreateBuilder(args).Build().Run();
 
 public class WSActions
 {
-    public static void Broadcast(List<Player> players, string message)
+    public static void BroadcastByColor(List<Player> players, (string firstMessage, string secondMessage) messages)
     {
         foreach (var player in players)
         {
-            player.Connection.Send(message);
+            if (player.Color == FigureColors.WHITE)
+            {
+                player.Connection.Send(messages.firstMessage);
+            }
+            else
+            {
+                player.Connection.Send(messages.secondMessage);
+            }
         }
     }
 }

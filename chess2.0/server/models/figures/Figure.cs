@@ -34,10 +34,10 @@ public class Figure
     
     public virtual bool CanMove(Cell target, List<Cell>? cells, KingAttacker? kingAttacker)
     {
-        if (kingAttacker!= null &&!kingAttacker.IntermCells.Contains(target))
+        if (kingAttacker != null && !kingAttacker.IntermCells.Contains(target))
         {
             return false;
         }
-        return!(target.Figure!= null && target.Figure.Color == Color);
+        return!(target.Figure != null && target.Figure.Color == Color);
     }
 }

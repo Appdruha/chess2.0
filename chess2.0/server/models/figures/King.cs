@@ -3,14 +3,11 @@ public class King : Figure
     public bool IsFirstStep { get; set; } = true;
     public bool IsMyTurn { get; set; }
 
-    public King(FigureColors color, Cell cell) : base(color, cell, FigureNames.KING)
-    {
-        IsMyTurn = true;
-    }
+    public King(FigureColors color, Cell cell) : base(color, cell, FigureNames.KING){}
 
     public override bool CanMove(Cell target, List<Cell> cells, KingAttacker? kingAttacker)
     {
-        if (Color == FigureColors.BLACK)
+        if (IsMyTurn)
         {
             var figure = target.Figure;
             target.SetFigure(null);
@@ -23,7 +20,7 @@ public class King : Figure
             target.SetFigure(figure);
         }
         
-        if (!base.CanMove(target, cells, kingAttacker))
+        if (!base.CanMove(target, cells, null))
         {
             return false;
         }
@@ -33,20 +30,23 @@ public class King : Figure
         var dy = Math.Abs(cell.Y - target.Y);
         if (dy == 1 && cell.IsEmptyVertical(target, cells))
         {
+            IsFirstStep = false;
             return true;
         }
         
         if (dx == 1 && cell.IsEmptyHorizontal(target, cells))
         {
+            IsFirstStep = false;
             return true;
         }
         
         if (dx == 1 && dy == 1 && cell.IsEmptyDiagonal(target, cells))
         {
+            IsFirstStep = false;
             return true;
         }
         
-        if (Color == FigureColors.BLACK && IsFirstStep && cell.IsUnderAttack(cells, Color) == null && cell.IsEmptyHorizontal(target, cells))
+        if (IsMyTurn && IsFirstStep && cell.IsUnderAttack(cells, Color) == null && cell.IsEmptyHorizontal(target, cells))
         {
             bool Castling(Cell rookCell, int rookDx)
             {
@@ -60,6 +60,7 @@ public class King : Figure
                         rook.IsFirstStep = false;
                         rookCell.SetFigure(null);
                         newRookCell.SetFigure(rook);
+                        IsFirstStep = false;
                         return true;
                     }
 

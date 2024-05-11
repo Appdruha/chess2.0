@@ -15,7 +15,7 @@ public class Controller
         var gameRoom = Db.JoinRoom(roomId, client);
         if (gameRoom == null)
         {
-            return CreateJsonMessage(MessageType.Error, gameRoom, roomId);
+            return CreateJsonMessage(MessageType.Error, null, roomId);
         }
 
         return CreateJsonMessage(MessageType.Join, null, roomId);
@@ -24,29 +24,32 @@ public class Controller
     public static string Init(string roomId)
     {
         var gameRoom = Db.GetRoomState(roomId);
-        return CreateJsonMessage(MessageType.Init, gameRoom, roomId);
+        var gameRoomDto = new GameRoomDto(gameRoom, FigureColors.WHITE);
+        return CreateJsonMessage(MessageType.Init, gameRoomDto, roomId);
     }
 
-    public static (List<Player>, string) Start(string roomId)
+    public static (List<Player>, (string firstMessage, string secondMessage)) Start(string roomId)
     {
         var gameRoom = Db.StartGame(roomId);
-        return (gameRoom.Players, CreateJsonMessage(MessageType.Start, gameRoom, roomId));
+        var firstGameRoomData = new GameRoomDto(gameRoom, FigureColors.WHITE);
+        var secondGameRoomData = new GameRoomDto(gameRoom, FigureColors.BLACK);
+        return (gameRoom.Players,
+            (CreateJsonMessage(MessageType.Start, firstGameRoomData, roomId),
+                CreateJsonMessage(MessageType.Start, secondGameRoomData, roomId)));
     }
-    
-    public static (List<Player>, string) Move(string roomId, string moveParams)
+
+    public static (List<Player>, (string firstMessage, string secondMessage)) Move(string roomId, string moveParams)
     {
         var gameRoom = Db.ChangeRoomState(roomId, moveParams);
-        return (gameRoom.Players, CreateJsonMessage(MessageType.NextTurn, gameRoom, roomId));
+        var firstGameRoomData = new GameRoomDto(gameRoom, FigureColors.WHITE);
+        var secondGameRoomData = new GameRoomDto(gameRoom, FigureColors.BLACK);
+        return (gameRoom.Players,
+            (CreateJsonMessage(MessageType.Start, firstGameRoomData, roomId),
+                CreateJsonMessage(MessageType.Start, secondGameRoomData, roomId)));
     }
 
-    private static string CreateJsonMessage(MessageType type, GameRoom? gameRoom, string roomId)
+    private static string CreateJsonMessage(MessageType type, GameRoomDto? gameRoomDto, string roomId)
     {
-        GameRoomDto? gameRoomDto = null;
-        if (gameRoom != null)
-        {
-            gameRoomDto = new GameRoomDto(gameRoom);
-        }
-
         var message = new MessageToClient(type, gameRoomDto, roomId);
         return JsonConvert.SerializeObject(message);
     }
