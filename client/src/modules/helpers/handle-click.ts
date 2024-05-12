@@ -7,6 +7,7 @@ import { MessageToServer } from '../../models/Message.ts'
 interface HandleClickArgs {
   isMyTurn?: boolean
   turnColor?: FigureColors | null
+  isMate?: boolean
   chessBoardState: Cell[] | undefined
   selectedFigureIconRef: MutableRefObject<HTMLImageElement | null>
   clientPositionOnChessBoard: { x: number, y: number } | null
@@ -28,6 +29,7 @@ export const handleClick = (
   {
     isMyTurn,
     turnColor,
+    isMate,
     chessBoardState,
     selectedFigureIconRef,
     clientPositionOnChessBoard,
@@ -38,7 +40,7 @@ export const handleClick = (
     moveMessage,
     prevCellIdRef
   }: HandleClickArgs) => {
-  if (isMyTurn && chessBoardState && clientPositionOnChessBoard) {
+  if (isMyTurn && chessBoardState && clientPositionOnChessBoard && !isMate) {
     const targetCell = findCell(clientPositionOnChessBoard, chessBoardState, cellSideSize)
     if (targetCell) {
       if (!selectedFigureIconRef.current && targetCell.figure && targetCell.figure.color === turnColor) {
@@ -56,7 +58,5 @@ export const handleClick = (
         }
       }
     }
-  } else {
-    throw new Error('handle click error')
   }
 }

@@ -110,7 +110,8 @@ export const Game = () => {
           cellSideSize,
           sendMessage,
           moveMessage,
-          prevCellIdRef
+          prevCellIdRef,
+          isMate: message?.type === MessageType.endGame
         })}
       ></canvas>
     </div>
