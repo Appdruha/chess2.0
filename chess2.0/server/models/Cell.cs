@@ -12,7 +12,7 @@ public class Cell
     [JsonProperty("x")]
     public int X { get; }
     [JsonProperty("y")]
-    public int Y { get; }
+    public int Y { get; set; }
     [JsonProperty("color")]
     public CellCollors Color { get; }
     [JsonProperty("id")]

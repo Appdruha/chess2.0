@@ -126,7 +126,10 @@ public class GameRoomDto
 
     public GameRoomDto(GameRoom gameRoom, FigureColors playerColor)
     {
-        ChessBoardState = gameRoom.ChessBoard.ChessBoardState;
+        ChessBoardState = playerColor == FigureColors.WHITE 
+            ? gameRoom.ChessBoard.ChessBoardState 
+            : gameRoom.ChessBoard.GetReversedBoard();
+        
         Turn = gameRoom.TurnColor == playerColor;
         Color = gameRoom.TurnColor;
     }

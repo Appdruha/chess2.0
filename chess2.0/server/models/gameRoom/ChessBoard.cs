@@ -24,6 +24,20 @@ public class ChessBoard
         ChessBoardState = chessBoard;
     }
 
+    public List<Cell> GetReversedBoard()
+    {
+        var reversedBoard = new List<Cell>();
+        foreach (var cell in ChessBoardState)
+        {
+            var figure = cell.Figure;
+            var newCell = new Cell(cell.X, Math.Abs(cell.Y - 7), cell.Color, cell.Id);
+            newCell.SetFigure(figure);
+            reversedBoard.Add(newCell);
+        }
+
+        return reversedBoard;
+    }
+
     public void InitFigures()
     {
         foreach (var cell in ChessBoardState)
