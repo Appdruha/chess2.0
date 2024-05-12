@@ -63,6 +63,10 @@ export const Game = () => {
       const color = message.params?.color
       alert(`${color === FigureColors.black ? 'Белые' : 'Черные'} победили!`)
     }
+    if (message && message.type === MessageType.changeFigure) {
+      const result = prompt('Имя фигуры')
+      sendMessage({ roomId, type: MessageType.changeFigure, params: result! })
+    }
   }, [message])
 
   const drawAll = () => {
