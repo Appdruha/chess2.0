@@ -64,9 +64,14 @@ export const useWebsocket = (
         || type === MessageType.join
         || type === MessageType.init
         || type === MessageType.nextTurn
-        || type === MessageType.endGame
         || type === MessageType.start) {
         setLastMessage({ params, roomId, type })
+      }
+      if (type === MessageType.endGame) {
+        setLastMessage({ params, roomId, type })
+        if (params?.turn) {
+          setTimeout(() => sendMessage({ params: '', type: MessageType.restart, roomId }), 8000)
+        }
       }
     }
   } catch (e) {
