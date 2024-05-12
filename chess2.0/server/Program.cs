@@ -64,6 +64,12 @@ server.Start(ws =>
                     WSActions.BroadcastByColor(players, messagesForClients);
                     break;
                 }
+                case MessageType.ChangeFigure:
+                {
+                    var (players, messagesForClients) = Controller.ChangeFigure(roomId, clientParams);
+                    WSActions.BroadcastByColor(players, messagesForClients);
+                    break;
+                }
             }
         }
         catch(Exception e)
@@ -77,15 +83,15 @@ WebApplication.CreateBuilder(args).Build().Run();
 
 public class WSActions
 {
-    public static void BroadcastByColor(List<Player> players, (string firstMessage, string secondMessage) messages)
+    public static void BroadcastByColor(List<Player> players, (string? firstMessage, string? secondMessage) messages)
     {
         foreach (var player in players)
         {
-            if (player.Color == FigureColors.WHITE)
+            if (player.Color == FigureColors.WHITE && messages.firstMessage != null)
             {
                 player.Connection.Send(messages.firstMessage);
             }
-            else
+            else if (player.Color == FigureColors.BLACK && messages.secondMessage != null)
             {
                 player.Connection.Send(messages.secondMessage);
             }

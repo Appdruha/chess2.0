@@ -104,6 +104,31 @@ public class ChessBoard
         }
     }
 
+    public void ChangeFigure(string figureName)
+    {
+        foreach (var cell in ChessBoardState)
+        {
+            if ((cell.Y == 0 || cell.Y == 7) && cell.Figure != null && cell.Figure.Name == FigureNames.PAWN)
+            {
+                var newFigureColor = cell.Figure!.Color;
+                if (figureName == "rook")
+                {
+                    cell.SetFigure(new Rook(newFigureColor, cell));
+                } else if (figureName == "queen")
+                {
+                    cell.SetFigure(new Queen(newFigureColor, cell));
+                } else if (figureName == "bishop")
+                {
+                    cell.SetFigure(new Bishop(newFigureColor, cell));
+                } else 
+                {
+                    cell.SetFigure(new Knight(newFigureColor, cell));
+                }
+                return;
+            }
+        }
+    }
+
     public (Cell?, bool) MoveFigure(string moveFigureParams, KingAttacker? kingAttacker, Cell kingCell)
     {
         string[] ids = moveFigureParams.Split(' ');

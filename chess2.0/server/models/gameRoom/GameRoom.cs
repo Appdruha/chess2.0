@@ -50,6 +50,24 @@ public class GameRoom
         return this;
     }
 
+    public GameRoom ChangeFigure(string figureName)
+    {
+        ChessBoard.ChangeFigure(figureName);
+        
+        var whiteKingCell = Players.Find(player => player.Color == FigureColors.WHITE)!.KingCell;
+        var blackKingCell = Players.Find(player => player.Color == FigureColors.BLACK)!.KingCell;
+        
+        if (ChessBoard.CheckIsMate(
+                FindKingAttacker(TurnColor == FigureColors.WHITE, whiteKingCell, blackKingCell),
+                TurnColor, TurnColor == FigureColors.WHITE ? whiteKingCell : blackKingCell)
+           )
+        {
+            IsMate = true;
+        }
+
+        return this;
+    }
+
     public GameRoom MoveFigure(string moveParams)
     {
         var isWhiteTurn = TurnColor == FigureColors.WHITE;

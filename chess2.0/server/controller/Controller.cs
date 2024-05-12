@@ -37,7 +37,7 @@ public class Controller
             (CreateJsonMessage(MessageType.Start, firstGameRoomData, roomId),
                 CreateJsonMessage(MessageType.Start, secondGameRoomData, roomId)));
     }
-    
+
     public static (List<Player>, (string firstMessage, string secondMessage)) Restart(string roomId)
     {
         var gameRoom = Db.RestartGame(roomId);
@@ -47,10 +47,10 @@ public class Controller
             (CreateJsonMessage(MessageType.Start, firstGameRoomData, roomId),
                 CreateJsonMessage(MessageType.Start, secondGameRoomData, roomId)));
     }
-
-    public static (List<Player>, (string firstMessage, string secondMessage)) Move(string roomId, string moveParams)
+    
+    public static (List<Player>, (string firstMessage, string secondMessage)) ChangeFigure(string roomId, string figureName)
     {
-        var gameRoom = Db.ChangeRoomState(roomId, moveParams);
+        var gameRoom = Db.ChangeFigure(roomId, figureName.Trim().ToLower());
         var firstGameRoomData = new GameRoomDto(gameRoom, FigureColors.WHITE);
         var secondGameRoomData = new GameRoomDto(gameRoom, FigureColors.BLACK);
         
@@ -62,6 +62,38 @@ public class Controller
         }
         
         return (gameRoom.Players,
+            (CreateJsonMessage(MessageType.Start, firstGameRoomData, roomId),
+                CreateJsonMessage(MessageType.Start, secondGameRoomData, roomId)));
+    }
+
+    public static (List<Player>, (string? firstMessage, string? secondMessage)) Move(string roomId, string moveParams)
+    {
+        var gameRoom = Db.MoveFigure(roomId, moveParams);
+
+        var playerAbilityToChangeFigure = CheckPlayerAbilityToChangeFigure(gameRoom.ChessBoard.ChessBoardState);
+        if (playerAbilityToChangeFigure != null)
+        {
+            if (playerAbilityToChangeFigure == FigureColors.WHITE)
+            {
+                return (gameRoom.Players,
+                    (CreateJsonMessage(MessageType.ChangeFigure, null, roomId), null));
+            }
+            
+            return (gameRoom.Players, 
+                (null, CreateJsonMessage(MessageType.ChangeFigure, null, roomId)));
+        }
+
+        var firstGameRoomData = new GameRoomDto(gameRoom, FigureColors.WHITE);
+        var secondGameRoomData = new GameRoomDto(gameRoom, FigureColors.BLACK);
+
+        if (gameRoom.IsMate)
+        {
+            return (gameRoom.Players,
+                (CreateJsonMessage(MessageType.EndGame, firstGameRoomData, roomId),
+                    CreateJsonMessage(MessageType.EndGame, secondGameRoomData, roomId)));
+        }
+
+        return (gameRoom.Players,
             (CreateJsonMessage(MessageType.NextTurn, firstGameRoomData, roomId),
                 CreateJsonMessage(MessageType.NextTurn, secondGameRoomData, roomId)));
     }
@@ -70,5 +102,18 @@ public class Controller
     {
         var message = new MessageToClient(type, gameRoomDto, roomId);
         return JsonConvert.SerializeObject(message);
+    }
+
+    private static FigureColors? CheckPlayerAbilityToChangeFigure(List<Cell> chessBoardState)
+    {
+        foreach (var cell in chessBoardState)
+        {
+            if ((cell.Y == 0 || cell.Y == 7) && cell.Figure != null && cell.Figure.Name == FigureNames.PAWN)
+            {
+                return cell.Figure!.Color;
+            }
+        }
+
+        return null;
     }
 }
