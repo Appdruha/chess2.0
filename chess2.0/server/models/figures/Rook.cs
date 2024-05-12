@@ -14,7 +14,6 @@ public class Rook : Figure
         
         if (cell.IsEmptyVertical(target, cells) || cell.IsEmptyHorizontal(target, cells))
         {
-            IsFirstStep = false;
             return true;
         }
 

@@ -3,10 +3,10 @@ using Newtonsoft.Json;
 
 public class GameRoom
 {
-    public ChessBoard ChessBoard { get; set; }
+    public ChessBoard ChessBoard { get; }
     public FigureColors TurnColor { get; set; } = FigureColors.BLACK;
     public List<Player> Players { get; } = new List<Player>();
-    public bool IsMate { get; set; } = false;
+    public bool IsMate { get; set; }
 
     public GameRoom(IWebSocketConnection connection)
     {
@@ -28,23 +28,23 @@ public class GameRoom
     public GameRoom StartGame()
     {
         ChessBoard.InitFigures();
+        SetKingCells();
+
+        TurnColor = FigureColors.WHITE;
+        return this;
+    }
+    
+    public GameRoom RestartGame()
+    {
+        IsMate = false;
+        Players[0].Color = Players[0].Color == FigureColors.WHITE ? FigureColors.BLACK : FigureColors.WHITE;
+        Players[1].Color = Players[1].Color == FigureColors.WHITE ? FigureColors.BLACK : FigureColors.WHITE;
         foreach (var cell in ChessBoard.ChessBoardState)
         {
-            if (cell.Figure != null && cell.Figure.Name == FigureNames.KING)
-            {
-                var king = (King)cell.Figure;
-                if (king.Color == FigureColors.WHITE)
-                {
-                    king.IsMyTurn = true;
-                    Players[0].KingCell = cell;
-                }
-                else
-                {
-                    king.IsMyTurn = false;
-                    Players[1].KingCell = cell;
-                }
-            }
+            cell.SetFigure(null);
         }
+        ChessBoard.InitFigures();
+        SetKingCells();
 
         TurnColor = FigureColors.WHITE;
         return this;
@@ -53,8 +53,8 @@ public class GameRoom
     public GameRoom MoveFigure(string moveParams)
     {
         var isWhiteTurn = TurnColor == FigureColors.WHITE;
-        var whiteKingCell = Players[0].KingCell;
-        var blackKingCell = Players[1].KingCell;
+        var whiteKingCell = Players.Find(player => player.Color == FigureColors.WHITE)!.KingCell;
+        var blackKingCell = Players.Find(player => player.Color == FigureColors.BLACK)!.KingCell;
         var kingAttacker = FindKingAttacker(isWhiteTurn, whiteKingCell, blackKingCell);
         
         var (newKingCell, toggleTurn) = 
@@ -78,8 +78,10 @@ public class GameRoom
             TurnColor = isWhiteTurn ? FigureColors.BLACK : FigureColors.WHITE;
         }
 
-        if (ChessBoard.CheckIsMate(FindKingAttacker(TurnColor == FigureColors.WHITE, whiteKingCell, blackKingCell),
-                TurnColor))
+        if (ChessBoard.CheckIsMate(
+                FindKingAttacker(TurnColor == FigureColors.WHITE, whiteKingCell, blackKingCell),
+                TurnColor, TurnColor == FigureColors.WHITE ? whiteKingCell : blackKingCell)
+            )
         {
             IsMate = true;
         }
@@ -92,6 +94,27 @@ public class GameRoom
         return isWhiteTurn
             ? whiteKingCell.IsUnderAttack(ChessBoard.ChessBoardState, FigureColors.WHITE)
             : blackKingCell.IsUnderAttack(ChessBoard.ChessBoardState, FigureColors.BLACK);
+    }
+
+    public void SetKingCells()
+    {
+        foreach (var cell in ChessBoard.ChessBoardState)
+        {
+            if (cell.Figure != null && cell.Figure.Name == FigureNames.KING)
+            {
+                var king = (King)cell.Figure;
+                if (king.Color == FigureColors.WHITE)
+                {
+                    king.IsMyTurn = true;
+                    Players.Find(player => player.Color == FigureColors.WHITE)!.KingCell = cell;
+                }
+                else
+                {
+                    king.IsMyTurn = false;
+                    Players.Find(player => player.Color == FigureColors.BLACK)!.KingCell = cell;
+                }
+            }
+        }
     }
 }
 

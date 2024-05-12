@@ -3,7 +3,7 @@ using Fleck;
 public class Player
 {
     public IWebSocketConnection Connection { get; }
-    public FigureColors Color { get; }
+    public FigureColors Color { get; set; }
     public Cell KingCell { get; set; }
 
     public Player(FigureColors color, IWebSocketConnection connection)

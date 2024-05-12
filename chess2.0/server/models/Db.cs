@@ -34,4 +34,10 @@ public class Db
         var gameRoomState = _rooms[roomId].StartGame();
         return gameRoomState;
     }
+    
+    public static GameRoom RestartGame(string roomId)
+    {
+        var gameRoomState = _rooms[roomId].RestartGame();
+        return gameRoomState;
+    }
 }

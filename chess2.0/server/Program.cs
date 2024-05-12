@@ -52,6 +52,12 @@ server.Start(ws =>
                     WSActions.BroadcastByColor(players, messagesForClients);
                     break;
                 }
+                case MessageType.Restart:
+                {
+                    var (players, messagesForClients) = Controller.Restart(roomId);
+                    WSActions.BroadcastByColor(players, messagesForClients);
+                    break;
+                }
                 case MessageType.Move:
                 {
                     var (players, messagesForClients) = Controller.Move(roomId, clientParams);

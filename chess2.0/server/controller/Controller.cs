@@ -37,6 +37,16 @@ public class Controller
             (CreateJsonMessage(MessageType.Start, firstGameRoomData, roomId),
                 CreateJsonMessage(MessageType.Start, secondGameRoomData, roomId)));
     }
+    
+    public static (List<Player>, (string firstMessage, string secondMessage)) Restart(string roomId)
+    {
+        var gameRoom = Db.RestartGame(roomId);
+        var firstGameRoomData = new GameRoomDto(gameRoom, FigureColors.WHITE);
+        var secondGameRoomData = new GameRoomDto(gameRoom, FigureColors.BLACK);
+        return (gameRoom.Players,
+            (CreateJsonMessage(MessageType.Start, firstGameRoomData, roomId),
+                CreateJsonMessage(MessageType.Start, secondGameRoomData, roomId)));
+    }
 
     public static (List<Player>, (string firstMessage, string secondMessage)) Move(string roomId, string moveParams)
     {

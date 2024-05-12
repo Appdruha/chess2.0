@@ -30,19 +30,16 @@ public class King : Figure
         var dy = Math.Abs(cell.Y - target.Y);
         if (dy == 1 && cell.IsEmptyVertical(target, cells))
         {
-            IsFirstStep = false;
             return true;
         }
         
         if (dx == 1 && cell.IsEmptyHorizontal(target, cells))
         {
-            IsFirstStep = false;
             return true;
         }
         
         if (dx == 1 && dy == 1 && cell.IsEmptyDiagonal(target, cells))
         {
-            IsFirstStep = false;
             return true;
         }
         

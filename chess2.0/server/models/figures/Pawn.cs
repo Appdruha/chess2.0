@@ -19,7 +19,6 @@ public class Pawn : Figure
                 && (target.Y == cell.Y + firstStepDirection))
             && target.X == cell.X && target.Figure == null && cell.IsEmptyVertical(target, cells))
         {
-            IsFirstStep = false;
             return true;
         }
 
@@ -27,7 +26,6 @@ public class Pawn : Figure
             && (target.X == cell.X + 1 || target.X == cell.X - 1)
             && target.Figure != null)
         {
-            IsFirstStep = false;
             return true;
         }
 
