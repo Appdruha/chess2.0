@@ -1,4 +1,4 @@
-import { FigureNames } from '../../models/Figure.ts'
+import { FigureNames } from '../../../models/Figure.ts'
 import wB from '/public/alpha/wB.png'
 import bB from '/public/alpha/bB.png'
 import wP from '/public/alpha/wP.png'

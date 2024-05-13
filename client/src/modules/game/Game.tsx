@@ -1,16 +1,18 @@
-import { useWebsocket } from '../hooks/use-websocket.ts'
-import { useContext, useEffect, useRef } from 'react'
-import { WebsocketContext } from '../app/websocket-context.ts'
+import { useWebsocket } from '../../hooks/use-websocket.ts'
+import { useContext, useEffect, useRef, useState } from 'react'
+import { WebsocketContext } from '../../app/websocket-context.ts'
 import { useLocation, useParams } from 'react-router-dom'
-import { MessageToServer, MessageType } from '../models/Message.ts'
+import { MessageToServer, MessageType } from '../../models/Message.ts'
 import { cellSideSize, chessBoardSideSize } from './consts/chess-board-size.ts'
-import { Cell, CellColors } from '../models/Cell.ts'
+import { Cell, CellColors } from '../../models/Cell.ts'
 import { getFigureIcons } from './helpers/get-figure-icon.ts'
 import { handleMouseMove } from './helpers/handle-mouse-move.ts'
 import { handleClick } from './helpers/handle-click.ts'
 import { chooseFigureIcon } from './helpers/choose-figure-icon.ts'
 import styles from './game.module.css'
-import { FigureColors } from '../models/Figure.ts'
+import { FigureColors } from '../../models/Figure.ts'
+import { Modal } from '../../shared/modal/Modal.tsx'
+import { SelectFigure } from './components/select-figure/Select-figure.tsx'
 
 export const Game = () => {
   const roomId = useParams().roomId!
@@ -32,6 +34,8 @@ export const Game = () => {
     roomId,
   }
 
+  const [newFigureName, setNewFigureName] = useState<null | string>(null)
+  const [isSelectFigureModalOpen, setIsSelectFigureModalOpen] = useState(false)
   const [message, sendMessage] = useWebsocket({ webSocketState })
 
   useEffect(() => {
@@ -64,10 +68,16 @@ export const Game = () => {
       alert(`${color === FigureColors.black ? 'Белые' : 'Черные'} победили!`)
     }
     if (message && message.type === MessageType.changeFigure) {
-      const result = prompt('Имя фигуры')
-      sendMessage({ roomId, type: MessageType.changeFigure, params: result! })
+      setIsSelectFigureModalOpen(true)
     }
   }, [message])
+
+  useEffect(() => {
+    if (newFigureName) {
+      sendMessage({ roomId, type: MessageType.changeFigure, params: newFigureName })
+      setNewFigureName(null)
+    }
+  }, [newFigureName])
 
   const drawAll = () => {
     if (chessBoardRef.current && ctxRef.current && chessBoardStateRef.current) {
@@ -115,9 +125,17 @@ export const Game = () => {
           sendMessage,
           moveMessage,
           prevCellIdRef,
-          isMate: message?.type === MessageType.endGame
+          isMate: message?.type === MessageType.endGame,
         })}
       ></canvas>
+      {isSelectFigureModalOpen
+        && <Modal>
+          <SelectFigure
+            playerColor={message!.params!.color!}
+            setIsModalOpen={setIsSelectFigureModalOpen}
+            setNewFigureName={setNewFigureName} />
+        </Modal>
+      }
     </div>
   )
 }
