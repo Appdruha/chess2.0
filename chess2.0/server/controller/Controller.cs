@@ -42,6 +42,17 @@ public class Controller
             (CreateJsonMessage(MessageType.Start, firstGameRoomData, roomId),
                 CreateJsonMessage(MessageType.Start, secondGameRoomData, roomId)));
     }
+    
+    public static (Player player, string message)? Leave(string roomId, IWebSocketConnection client)
+    {
+        var gameRoom = Db.Leave(roomId, client);
+        if (gameRoom != null)
+        {
+            return (gameRoom.Players[0], CreateJsonMessage(MessageType.Leave, null, roomId));
+        }
+
+        return null;
+    }
 
     public static (List<Player>, (string firstMessage, string secondMessage)) Restart(string roomId)
     {
@@ -51,6 +62,45 @@ public class Controller
         return (gameRoom.Players,
             (CreateJsonMessage(MessageType.Start, firstGameRoomData, roomId),
                 CreateJsonMessage(MessageType.Start, secondGameRoomData, roomId)));
+    }
+    
+    public static (List<Player>, (string firstMessage, string secondMessage)) GiveUp(string roomId, string playerColor)
+    {
+        var winner = GameWinner.White;
+        if (playerColor.Trim().ToLower() == "white")
+        {
+            winner = GameWinner.Black;
+        }
+        var gameRoom = Db.GiveUp(roomId, winner);
+        var firstGameRoomData = new GameRoomDto(gameRoom, FigureColors.WHITE);
+        var secondGameRoomData = new GameRoomDto(gameRoom, FigureColors.BLACK);
+        return (gameRoom.Players,
+            (CreateJsonMessage(MessageType.EndGame, firstGameRoomData, roomId),
+                CreateJsonMessage(MessageType.EndGame, secondGameRoomData, roomId)));
+    }
+    
+    public static (List<Player>, (string firstMessage, string secondMessage)) ConfirmDraw(string roomId)
+    {
+        var gameRoom = Db.ConfirmDraw(roomId);
+        var firstGameRoomData = new GameRoomDto(gameRoom, FigureColors.WHITE);
+        var secondGameRoomData = new GameRoomDto(gameRoom, FigureColors.BLACK);
+        return (gameRoom.Players,
+            (CreateJsonMessage(MessageType.EndGame, firstGameRoomData, roomId),
+                CreateJsonMessage(MessageType.EndGame, secondGameRoomData, roomId)));
+    }
+    
+    public static (Player player, string message)? OfferDraw(string roomId, IWebSocketConnection client)
+    {
+        var players = Db.GetRoomState(roomId).Players;
+        foreach (var player in players)
+        {
+            if (player.Connection != client)
+            {
+                return (player, CreateJsonMessage(MessageType.ConfirmDraw, null, roomId));
+            }
+        }
+
+        return null;
     }
     
     public static (List<Player>, (string firstMessage, string secondMessage)) ChangeFigure(string roomId, string figureName)

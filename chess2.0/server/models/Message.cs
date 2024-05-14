@@ -40,4 +40,7 @@ public enum MessageType
     ChangeFigure,
     Restart,
     Error,
+    GiveUp,
+    OfferDraw,
+    ConfirmDraw
 }

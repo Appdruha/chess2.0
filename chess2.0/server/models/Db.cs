@@ -17,10 +17,33 @@ public class Db
         return gameRoomState;
     }
     
+    public static GameRoom? Leave(string roomId, IWebSocketConnection client)
+    {
+        var gameRoomState = _rooms[roomId].Leave(client);
+        if (gameRoomState.Players.Count == 0)
+        {
+            _rooms.Remove(roomId);
+            return null;
+        }
+        return gameRoomState;
+    }
+    
     public static GameRoom GetRoomState(string roomId)
     {
         var gameRoomState = _rooms[roomId];
         return gameRoomState;
+    }
+    
+    public static GameRoom GiveUp(string roomId, GameWinner winner)
+    {
+        _rooms[roomId].Winner = winner;
+        return _rooms[roomId];
+    }
+    
+    public static GameRoom ConfirmDraw(string roomId)
+    {
+        _rooms[roomId].Winner = GameWinner.Draw;
+        return _rooms[roomId];
     }
     
     public static GameRoom MoveFigure(string roomId, string moveParams)

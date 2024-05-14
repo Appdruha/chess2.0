@@ -31,6 +31,16 @@ public class GameRoom
         Players.Add(new Player(FigureColors.BLACK, connection));
         return this;
     }
+    
+    public GameRoom Leave(IWebSocketConnection connection)
+    {
+        var player = Players.Find(player => player.Connection == connection);
+        if (player != null)
+        {
+            Players.Remove(player);
+        }
+        return this;
+    }
 
     public GameRoom StartGame()
     {

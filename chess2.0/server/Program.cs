@@ -70,6 +70,38 @@ server.Start(ws =>
                     WSActions.BroadcastByColor(players, messagesForClients);
                     break;
                 }
+                case MessageType.GiveUp:
+                {
+                    var (players, messagesForClients) = Controller.GiveUp(roomId, clientParams);
+                    WSActions.BroadcastByColor(players, messagesForClients);
+                    break;
+                }
+                case MessageType.ConfirmDraw:
+                {
+                    var (players, messagesForClients) = Controller.ConfirmDraw(roomId);
+                    WSActions.BroadcastByColor(players, messagesForClients);
+                    break;
+                }
+                case MessageType.Leave:
+                {
+                    var tuple = Controller.Leave(roomId, ws);
+                    if (tuple != null)
+                    {
+                        var data = ((Player, string))tuple;
+                        data.Item1.Connection.Send(data.Item2);
+                    }
+                    break;
+                }
+                case MessageType.OfferDraw:
+                {
+                    var tuple = Controller.OfferDraw(roomId, ws);
+                    if (tuple != null)
+                    {
+                        var data = ((Player, string))tuple;
+                        data.Item1.Connection.Send(data.Item2);
+                    }
+                    break;
+                }
             }
         }
         catch(Exception e)
