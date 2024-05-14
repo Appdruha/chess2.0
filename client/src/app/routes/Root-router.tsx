@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import { Layout } from '../layout/Layout.tsx'
 import {GamingRoom} from '../../pages/Gaming-room.tsx'
-import { RoomDistributor } from './room-distributor/Room-distributor.tsx'
+import { RoomDistributor } from '../../modules/room-distributor/Room-distributor.tsx'
 
 export const RootRouter = () => {
   return (

@@ -1,0 +1,16 @@
+.button {
+    min-width: 160px;
+    height: 50px;
+    background: #be7e1e;
+    border: 1px solid #72340d;
+    border-radius: 8px;
+    color: #eee3cf;
+    font-size: 18px;
+    font-weight: bold;
+    transition: all 400ms;
+}
+
+.button:hover {
+    scale: 1.1;
+    background: #c98e46;
+}

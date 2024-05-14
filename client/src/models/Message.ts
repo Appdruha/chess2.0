@@ -15,9 +15,18 @@ export enum MessageType {
   error,
 }
 
+export enum GameWinner
+{
+  white,
+  black,
+  draw
+}
+
 export interface MessageParams {
   chessBoardState: Cell[]
-  turn: boolean
+  isMyTurn: boolean
+  turn: number
+  winner: GameWinner | null
   color: FigureColors | null
 }
 

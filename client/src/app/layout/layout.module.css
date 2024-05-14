@@ -3,7 +3,8 @@
     margin: auto;
     flex-direction: column;
     flex-wrap: wrap;
-    width: 1200px;
+    width: 90vw;
+    max-width: 1440px;
     min-height: 100vh;
 }
 

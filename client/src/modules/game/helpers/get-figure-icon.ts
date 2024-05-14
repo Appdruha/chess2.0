@@ -11,6 +11,9 @@ import wR from '/public/alpha/wR.png'
 import bR from '/public/alpha/bR.png'
 import wK from '/public/alpha/wK.png'
 import bK from '/public/alpha/bK.png'
+import wRm from '/public/alpha/wRm.svg'
+import bRm from '/public/alpha/bRm.svg'
+import wall from '/public/alpha/wall.svg'
 
 export const getFigureIcons = () => {
   const icons: Record<FigureNames, { black: HTMLImageElement, white: HTMLImageElement } | null> = {
@@ -20,6 +23,8 @@ export const getFigureIcons = () => {
     [FigureNames.bishop]: null,
     [FigureNames.knight]: null,
     [FigureNames.rook]: null,
+    [FigureNames.ram]: null,
+    [FigureNames.wall]: null,
   }
 
   const wp = new Image()
@@ -57,6 +62,16 @@ export const getFigureIcons = () => {
   const br = new Image()
   br.src = bR
   icons[FigureNames.rook] = { black: br, white: wr }
+
+  const wrm = new Image()
+  wrm.src = wRm
+  const brm = new Image()
+  brm.src = bRm
+  icons[FigureNames.ram] = { black: brm, white: wrm }
+
+  const wallIcon = new Image()
+  wallIcon.src = wall
+  icons[FigureNames.wall] = { black: wallIcon, white: wallIcon }
 
   return icons
 }

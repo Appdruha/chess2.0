@@ -2,6 +2,7 @@ export enum FigureColors
 {
   black,
   white,
+  none
 }
 
 export enum FigureNames
@@ -12,6 +13,8 @@ export enum FigureNames
   queen,
   rook,
   bishop,
+  wall,
+  ram
 }
 
 export interface Figure {
