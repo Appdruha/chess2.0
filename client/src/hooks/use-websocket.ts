@@ -64,7 +64,8 @@ export const useWebsocket = (
         || type === MessageType.join
         || type === MessageType.init
         || type === MessageType.nextTurn
-        || type === MessageType.start) {
+        || type === MessageType.start
+      ) {
         setLastMessage({ params, roomId, type })
       }
       if (type === MessageType.endGame) {
@@ -72,6 +73,9 @@ export const useWebsocket = (
         if (params?.turn) {
           setTimeout(() => sendMessage({ params: '', type: MessageType.restart, roomId }), 8000)
         }
+      }
+      if (type === MessageType.changeFigure) {
+        setLastMessage({...lastMessage, type} as MessageFromServer)
       }
     }
   } catch (e) {

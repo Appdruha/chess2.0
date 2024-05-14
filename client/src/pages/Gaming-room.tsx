@@ -1,4 +1,4 @@
-import { Game } from '../modules/Game.tsx'
+import { Game } from '../modules/game/Game.tsx'
 
 export const GamingRoom = () => {
   return (

@@ -1,0 +1,18 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.heading {
+    width: 100%;
+    height: fit-content;
+    text-align: center;
+    pointer-events: none;
+}
+
+.figuresBlock {
+    display: flex;
+    margin: 36px auto;
+}

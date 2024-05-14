@@ -1,4 +1,4 @@
-import { Figure, FigureColors, FigureNames } from '../../models/Figure.ts'
+import { Figure, FigureColors, FigureNames } from '../../../models/Figure.ts'
 
 export interface ChooseFigureIconArgs {
   figure: Figure

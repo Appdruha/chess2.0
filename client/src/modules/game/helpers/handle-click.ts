@@ -1,8 +1,8 @@
-import { Cell } from '../../models/Cell.ts'
+import { Cell } from '../../../models/Cell.ts'
 import { Dispatch, MutableRefObject, SetStateAction } from 'react'
-import { FigureColors, FigureNames } from '../../models/Figure.ts'
+import { FigureColors, FigureNames } from '../../../models/Figure.ts'
 import { ChooseFigureIconArgs } from './choose-figure-icon.ts'
-import { MessageToServer } from '../../models/Message.ts'
+import { MessageToServer } from '../../../models/Message.ts'
 
 interface HandleClickArgs {
   isMyTurn?: boolean
