@@ -3,7 +3,8 @@ using Newtonsoft.Json;
 public enum FigureColors
 {
     BLACK,
-    WHITE
+    WHITE,
+    NONE
 }
 
 public enum FigureNames
@@ -13,7 +14,9 @@ public enum FigureNames
     PAWN,
     QUEEN,
     ROOK,
-    BISHOP
+    BISHOP,
+    WALL,
+    RAM
 }
 
 public class Figure
@@ -38,6 +41,21 @@ public class Figure
         {
             return false;
         }
-        return!(target.Figure != null && target.Figure.Color == Color);
+        if (target.Figure != null && target.Figure.Color == Color)
+        {
+            return false;
+        }
+
+        if (target.Figure != null && target.Figure.Name == FigureNames.WALL && Name != FigureNames.RAM)
+        {
+            return false;
+        }
+
+        if (target.Color == CellCollors.RED)
+        {
+            return false;
+        }
+
+        return true;
     }
 }

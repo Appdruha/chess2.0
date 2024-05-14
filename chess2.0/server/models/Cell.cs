@@ -14,7 +14,7 @@ public class Cell
     [JsonProperty("y")]
     public int Y { get; set; }
     [JsonProperty("color")]
-    public CellCollors Color { get; }
+    public CellCollors Color { get; set; }
     [JsonProperty("id")]
     public string Id { get; }
     private Figure? _figure;
@@ -140,6 +140,7 @@ public class Cell
                     if (figure.Name != FigureNames.PAWN)
                     {
                         List<Cell> intermCells = new List<Cell>();
+                        intermCells.Add(cell);
                         if (cell.X == X)
                         {
                             int maxY = Math.Max(Y, cell.Y);

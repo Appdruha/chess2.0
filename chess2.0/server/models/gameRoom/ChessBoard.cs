@@ -2,19 +2,25 @@ public class ChessBoard
 {
     public List<Cell> ChessBoardState;
 
-    public ChessBoard()
+    public ChessBoard(GameMode mode)
     {
+        var limit = 8;
+        if (mode == GameMode.Chess20)
+        {
+            limit = 10;
+        }
+
         var cellColor = CellCollors.BLACK;
         var chessBoard = new List<Cell>();
-        var columns = "ABCDEFGH";
-        for (var i = 0; i < 8; i++)
+        var columns = "ABCDEFGHIJ";
+        for (var i = 0; i < limit; i++)
         {
-            for (var j = 0; j < 8; j++)
+            for (var j = 0; j < limit; j++)
             {
                 var x = i;
-                var y = 7 - j;
+                var y = limit - 1 - j;
                 chessBoard.Add(new Cell(x, y, cellColor, columns[i] + (j + 1).ToString()));
-                if (j != 7)
+                if (j != limit - 1)
                 {
                     cellColor = cellColor == CellCollors.WHITE ? CellCollors.BLACK : CellCollors.WHITE;
                 }
@@ -24,13 +30,14 @@ public class ChessBoard
         ChessBoardState = chessBoard;
     }
 
-    public List<Cell> GetReversedBoard()
+    public List<Cell> GetReversedBoard(GameMode mode)
     {
         var reversedBoard = new List<Cell>();
         foreach (var cell in ChessBoardState)
         {
             var figure = cell.Figure;
-            var newCell = new Cell(cell.X, Math.Abs(cell.Y - 7), cell.Color, cell.Id);
+            var newCell = new Cell(cell.X, Math.Abs(cell.Y - (mode == GameMode.CommonChess ? 7 : 9)), cell.Color,
+                cell.Id);
             newCell.SetFigure(figure);
             reversedBoard.Add(newCell);
         }
@@ -38,94 +45,114 @@ public class ChessBoard
         return reversedBoard;
     }
 
-    public void InitFigures()
+    public void InitFigures(GameMode mode)
     {
+        var wallsLimit = 6;
+        var wallsCount = 0;
+        var random = new Random();
         foreach (var cell in ChessBoardState)
         {
-            if (cell.Id.Contains('2'))
+            if ((mode == GameMode.CommonChess && cell.Id.Contains('2')) ||
+                (mode == GameMode.Chess20 && cell.Id.Contains('3')))
             {
                 cell.SetFigure(new Pawn(FigureColors.WHITE, cell));
             }
-
-            if (cell.Id == "E1")
+            else if ((mode == GameMode.CommonChess && cell.Id == "E1") ||
+                     (mode == GameMode.Chess20 && cell.Id == "F2"))
             {
                 cell.SetFigure(new King(FigureColors.WHITE, cell));
             }
-
-            if (cell.Id == "D1")
+            else if ((mode == GameMode.CommonChess && cell.Id == "D1") ||
+                     (mode == GameMode.Chess20 && cell.Id == "E2"))
             {
                 cell.SetFigure(new Queen(FigureColors.WHITE, cell));
             }
-
-            if (cell.Id == "F1" || cell.Id == "C1")
+            else if ((mode == GameMode.CommonChess && (cell.Id == "F1" || cell.Id == "C1")) ||
+                     (mode == GameMode.Chess20 && (cell.Id == "G2" || cell.Id == "D2")))
             {
                 cell.SetFigure(new Bishop(FigureColors.WHITE, cell));
             }
-
-            if (cell.Id == "A1" || cell.Id == "H1")
+            else if ((mode == GameMode.CommonChess && (cell.Id == "A1" || cell.Id == "H1")) ||
+                     (mode == GameMode.Chess20 && (cell.Id == "B2" || cell.Id == "I2")))
             {
                 cell.SetFigure(new Rook(FigureColors.WHITE, cell));
             }
-
-            if (cell.Id == "B1" || cell.Id == "G1")
+            else if ((mode == GameMode.CommonChess && (cell.Id == "B1" || cell.Id == "G1")) ||
+                     (mode == GameMode.Chess20 && (cell.Id == "C2" || cell.Id == "H2")))
             {
                 cell.SetFigure(new Knight(FigureColors.WHITE, cell));
             }
-
-            if (cell.Id.Contains('7'))
+            else if ((mode == GameMode.CommonChess && cell.Id.Contains('7')) ||
+                     (mode == GameMode.Chess20 && cell.Id.Contains('8')))
             {
                 cell.SetFigure(new Pawn(FigureColors.BLACK, cell));
             }
-
-            if (cell.Id == "E8")
+            else if ((mode == GameMode.CommonChess && cell.Id == "E8") ||
+                     (mode == GameMode.Chess20 && cell.Id == "F9"))
             {
                 cell.SetFigure(new King(FigureColors.BLACK, cell));
             }
-
-            if (cell.Id == "D8")
+            else if ((mode == GameMode.CommonChess && cell.Id == "D8") ||
+                     (mode == GameMode.Chess20 && cell.Id == "E9"))
             {
                 cell.SetFigure(new Queen(FigureColors.BLACK, cell));
             }
-
-            if (cell.Id == "F8" || cell.Id == "C8")
+            else if ((mode == GameMode.CommonChess && (cell.Id == "F8" || cell.Id == "C8")) ||
+                     (mode == GameMode.Chess20 && (cell.Id == "G9" || cell.Id == "D9")))
             {
                 cell.SetFigure(new Bishop(FigureColors.BLACK, cell));
             }
-
-            if (cell.Id == "A8" || cell.Id == "H8")
+            else if ((mode == GameMode.CommonChess && (cell.Id == "A8" || cell.Id == "H8")) ||
+                     (mode == GameMode.Chess20 && (cell.Id == "B9" || cell.Id == "I9")))
             {
                 cell.SetFigure(new Rook(FigureColors.BLACK, cell));
             }
-
-            if (cell.Id == "B8" || cell.Id == "G8")
+            else if ((mode == GameMode.CommonChess && (cell.Id == "B8" || cell.Id == "G8")) ||
+                     (mode == GameMode.Chess20 && (cell.Id == "C9" || cell.Id == "H9")))
             {
                 cell.SetFigure(new Knight(FigureColors.BLACK, cell));
+            }
+
+            if (mode == GameMode.Chess20)
+            {
+                if (cell.Id.Contains('5') || cell.Id.Contains('6'))
+                {
+                    if (wallsCount < wallsLimit && random.Next(0, 10) > 6)
+                    {
+                        cell.SetFigure(new Wall(cell));
+                        wallsCount += 1;
+                    }
+                }
+                else if (cell.Id == "A3" || cell.Id == "J3")
+                {
+                    cell.SetFigure(new Ram(FigureColors.WHITE, cell));
+                }
+                else if (cell.Id == "A8" || cell.Id == "J8")
+                {
+                    cell.SetFigure(new Ram(FigureColors.BLACK, cell));
+                }
             }
         }
     }
 
-    public void ChangeFigure(string figureName)
+    public void ChangeFigure(string figureName, Cell cell)
     {
-        foreach (var cell in ChessBoardState)
+        var newFigureColor = cell.Figure!.Color;
+        if (figureName == "rook")
         {
-            if ((cell.Y == 0 || cell.Y == 7) && cell.Figure != null && cell.Figure.Name == FigureNames.PAWN)
-            {
-                var newFigureColor = cell.Figure!.Color;
-                if (figureName == "rook")
-                {
-                    cell.SetFigure(new Rook(newFigureColor, cell));
-                } else if (figureName == "queen")
-                {
-                    cell.SetFigure(new Queen(newFigureColor, cell));
-                } else if (figureName == "bishop")
-                {
-                    cell.SetFigure(new Bishop(newFigureColor, cell));
-                } else 
-                {
-                    cell.SetFigure(new Knight(newFigureColor, cell));
-                }
-                return;
-            }
+            cell.SetFigure(new Rook(newFigureColor, cell));
+        }
+        else if (figureName == "queen")
+        {
+            cell.SetFigure(new Queen(newFigureColor, cell));
+        }
+        else if (figureName == "bishop")
+        {
+            cell.SetFigure(new Bishop(newFigureColor, cell));
+        }
+        else
+        {
+            cell.SetFigure(new Knight(newFigureColor, cell));
         }
     }
 
@@ -136,6 +163,7 @@ public class ChessBoard
         {
             return (null, false);
         }
+
         Cell? fromCell = null;
         Cell? toCell = null;
         foreach (var cell in ChessBoardState)
@@ -164,22 +192,34 @@ public class ChessBoard
                     return (null, false);
                 }
             }
-            toCell.SetFigure(figure);
+
+            if (toCell.Figure != null && figure.Name == FigureNames.RAM)
+            {
+                toCell.SetFigure(new Pawn(figure.Color, toCell));
+            }
+            else
+            {
+                toCell.SetFigure(figure);
+            }
+
             if (figure.Name == FigureNames.KING)
             {
                 var possibleFigure = (King)figure;
                 possibleFigure.IsFirstStep = false;
             }
+
             if (figure.Name == FigureNames.ROOK)
             {
                 var possibleFigure = (Rook)figure;
                 possibleFigure.IsFirstStep = false;
             }
+
             if (figure.Name == FigureNames.PAWN)
             {
                 var possibleFigure = (Pawn)figure;
                 possibleFigure.IsFirstStep = false;
             }
+
             return figure.Name == FigureNames.KING ? (toCell, true) : (null, true);
         }
 
@@ -201,7 +241,7 @@ public class ChessBoard
                 return false;
             }
         }
-        
+
         var playerFigures = ChessBoardState
             .Where(cell => cell.Figure != null && cell.Figure.Color == playerColor)
             .Select(cell => cell.Figure);
@@ -219,7 +259,52 @@ public class ChessBoard
 
             return result;
         });
-        
+
         return cellToPreventCheck == null;
+    }
+
+    public GameWinner? DoNarrowing(int narrowingCount)
+    {
+        var kings = new List<Figure>();
+        var columns = "ABCDEFGHIJ";
+        foreach (var cell in ChessBoardState)
+        {
+            if (cell.Id.Contains((narrowingCount + 1).ToString()) ||
+                cell.Id.Contains(columns[narrowingCount]) ||
+                cell.Id.Contains(columns[10 - narrowingCount - 1]) ||
+                cell.Id.Contains((11 - narrowingCount - 1).ToString()))
+            {
+                if (cell.Figure != null && cell.Figure.Name == FigureNames.KING)
+                {
+                    kings.Add(cell.Figure);
+                }
+
+                cell.SetFigure(null);
+                cell.Color = CellCollors.RED;
+            }
+            else if ((cell.Id.Contains((narrowingCount + 2).ToString()) ||
+                      cell.Id.Contains((11 - narrowingCount - 2).ToString())) &&
+                     cell.Figure != null && cell.Figure.Name == FigureNames.PAWN)
+            {
+                cell.SetFigure(new Knight(cell.Figure.Color, cell));
+            }
+        }
+
+        if (kings.Count == 2)
+        {
+            return GameWinner.Draw;
+        }
+
+        if (kings.Count == 1)
+        {
+            if (kings[0].Color == FigureColors.BLACK)
+            {
+                return GameWinner.White;
+            }
+
+            return GameWinner.Black;
+        }
+
+        return null;
     }
 }

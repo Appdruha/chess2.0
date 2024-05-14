@@ -30,7 +30,7 @@ server.Start(ws =>
             {
                 case MessageType.Create:
                 {
-                    var messageForClient = Controller.CreateRoom(ws);
+                    var messageForClient = Controller.CreateRoom(ws, clientParams);
                     ws.Send(messageForClient);
                     break;
                 }

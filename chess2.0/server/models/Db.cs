@@ -5,9 +5,9 @@ public class Db
     static Dictionary<string, GameRoom> _rooms =
         new Dictionary<string, GameRoom>();
 
-    public static void CreateRoom(string roomId, IWebSocketConnection client)
+    public static void CreateRoom(string roomId, IWebSocketConnection client, GameMode mode)
     {
-        var gameRoomState = new GameRoom(client);
+        var gameRoomState = new GameRoom(client, mode);
         _rooms.Add(roomId, gameRoomState);
     }
     

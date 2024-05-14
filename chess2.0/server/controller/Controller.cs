@@ -3,10 +3,15 @@ using Newtonsoft.Json;
 
 public class Controller
 {
-    public static string CreateRoom(IWebSocketConnection client)
+    public static string CreateRoom(IWebSocketConnection client, string modeInString)
     {
+        var mode = GameMode.CommonChess;
+        if (modeInString.Trim().ToLower() == "chess20")
+        {
+            mode = GameMode.Chess20;
+        }
         var roomId = Guid.NewGuid().ToString();
-        Db.CreateRoom(roomId, client);
+        Db.CreateRoom(roomId, client, mode);
         return CreateJsonMessage(MessageType.Create, null, roomId);
     }
 
@@ -54,7 +59,7 @@ public class Controller
         var firstGameRoomData = new GameRoomDto(gameRoom, FigureColors.WHITE);
         var secondGameRoomData = new GameRoomDto(gameRoom, FigureColors.BLACK);
         
-        if (gameRoom.IsMate)
+        if (gameRoom.Winner != null)
         {
             return (gameRoom.Players,
                 (CreateJsonMessage(MessageType.EndGame, firstGameRoomData, roomId),
@@ -70,10 +75,10 @@ public class Controller
     {
         var gameRoom = Db.MoveFigure(roomId, moveParams);
 
-        var playerAbilityToChangeFigure = CheckPlayerAbilityToChangeFigure(gameRoom.ChessBoard.ChessBoardState);
-        if (playerAbilityToChangeFigure != null)
+        var changingFigureCell = gameRoom.ChangingFigureCell;
+        if (changingFigureCell != null)
         {
-            if (playerAbilityToChangeFigure == FigureColors.WHITE)
+            if (changingFigureCell.Figure!.Color == FigureColors.WHITE)
             {
                 return (gameRoom.Players,
                     (CreateJsonMessage(MessageType.ChangeFigure, null, roomId), null));
@@ -86,7 +91,7 @@ public class Controller
         var firstGameRoomData = new GameRoomDto(gameRoom, FigureColors.WHITE);
         var secondGameRoomData = new GameRoomDto(gameRoom, FigureColors.BLACK);
 
-        if (gameRoom.IsMate)
+        if (gameRoom.Winner != null)
         {
             return (gameRoom.Players,
                 (CreateJsonMessage(MessageType.EndGame, firstGameRoomData, roomId),
@@ -102,18 +107,5 @@ public class Controller
     {
         var message = new MessageToClient(type, gameRoomDto, roomId);
         return JsonConvert.SerializeObject(message);
-    }
-
-    private static FigureColors? CheckPlayerAbilityToChangeFigure(List<Cell> chessBoardState)
-    {
-        foreach (var cell in chessBoardState)
-        {
-            if ((cell.Y == 0 || cell.Y == 7) && cell.Figure != null && cell.Figure.Name == FigureNames.PAWN)
-            {
-                return cell.Figure!.Color;
-            }
-        }
-
-        return null;
     }
 }

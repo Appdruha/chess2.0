@@ -3,15 +3,22 @@ using Newtonsoft.Json;
 
 public class GameRoom
 {
-    public ChessBoard ChessBoard { get; }
+    public ChessBoard ChessBoard { get; set; }
+    public GameMode Mode { get; set; }
+    public int TurnsToNarrowing { get; set; } = 16;
+    public int CurrentTurn { get; set; } = 0;
+    public int NarrowingCount { get; set; } = 0;
+    public Cell? ChangingFigureCell { get; set; }
     public FigureColors TurnColor { get; set; } = FigureColors.BLACK;
     public List<Player> Players { get; } = new List<Player>();
-    public bool IsMate { get; set; }
+    public GameWinner? Winner { get; set; }
 
-    public GameRoom(IWebSocketConnection connection)
+    public GameRoom(IWebSocketConnection connection, GameMode mode)
     {
         Players.Add(new Player(FigureColors.WHITE, connection));
-        ChessBoard = new ChessBoard();
+        Mode = mode;
+        ChessBoard = new ChessBoard(mode);
+        Winner = null;
     }
 
     public GameRoom? JoinGameRoom(IWebSocketConnection connection)
@@ -27,44 +34,58 @@ public class GameRoom
 
     public GameRoom StartGame()
     {
-        ChessBoard.InitFigures();
+        ChessBoard.InitFigures(Mode);
         SetKingCells();
 
         TurnColor = FigureColors.WHITE;
+        CurrentTurn = 1;
         return this;
     }
-    
+
     public GameRoom RestartGame()
     {
-        IsMate = false;
+        Winner = null;
         Players[0].Color = Players[0].Color == FigureColors.WHITE ? FigureColors.BLACK : FigureColors.WHITE;
         Players[1].Color = Players[1].Color == FigureColors.WHITE ? FigureColors.BLACK : FigureColors.WHITE;
-        foreach (var cell in ChessBoard.ChessBoardState)
-        {
-            cell.SetFigure(null);
-        }
-        ChessBoard.InitFigures();
-        SetKingCells();
+        ChessBoard = new ChessBoard(Mode);
 
+        ChessBoard.InitFigures(Mode);
+        SetKingCells();
+        NarrowingCount = 0;
         TurnColor = FigureColors.WHITE;
+        CurrentTurn = 1;
         return this;
     }
 
     public GameRoom ChangeFigure(string figureName)
     {
-        ChessBoard.ChangeFigure(figureName);
-        
+        ChessBoard.ChangeFigure(figureName, ChangingFigureCell!);
+        ChangingFigureCell = null;
+
         var whiteKingCell = Players.Find(player => player.Color == FigureColors.WHITE)!.KingCell;
         var blackKingCell = Players.Find(player => player.Color == FigureColors.BLACK)!.KingCell;
-        
+
         if (ChessBoard.CheckIsMate(
                 FindKingAttacker(TurnColor == FigureColors.WHITE, whiteKingCell, blackKingCell),
                 TurnColor, TurnColor == FigureColors.WHITE ? whiteKingCell : blackKingCell)
            )
         {
-            IsMate = true;
+            CurrentTurn -= 1;
+            if (TurnColor == FigureColors.WHITE)
+            {
+                Winner = GameWinner.Black;
+            } else
+            {
+                Winner = GameWinner.White;
+            }
         }
 
+        if (Mode == GameMode.Chess20)
+        {
+            Winner = ChessBoard.DoNarrowing(NarrowingCount);
+            NarrowingCount += 1;
+        }
+        
         return this;
     }
 
@@ -74,10 +95,10 @@ public class GameRoom
         var whiteKingCell = Players.Find(player => player.Color == FigureColors.WHITE)!.KingCell;
         var blackKingCell = Players.Find(player => player.Color == FigureColors.BLACK)!.KingCell;
         var kingAttacker = FindKingAttacker(isWhiteTurn, whiteKingCell, blackKingCell);
-        
-        var (newKingCell, toggleTurn) = 
+
+        var (newKingCell, toggleTurn) =
             ChessBoard.MoveFigure(moveParams, kingAttacker, isWhiteTurn ? whiteKingCell : blackKingCell);
-        
+
         if (newKingCell != null)
         {
             var player = isWhiteTurn ? Players[0] : Players[1];
@@ -93,17 +114,34 @@ public class GameRoom
                 whiteKing.IsMyTurn = !whiteKing.IsMyTurn;
                 blackKing.IsMyTurn = !blackKing.IsMyTurn;
             }
+
             TurnColor = isWhiteTurn ? FigureColors.BLACK : FigureColors.WHITE;
+            CurrentTurn += 1;
         }
 
         if (ChessBoard.CheckIsMate(
                 FindKingAttacker(TurnColor == FigureColors.WHITE, whiteKingCell, blackKingCell),
                 TurnColor, TurnColor == FigureColors.WHITE ? whiteKingCell : blackKingCell)
-            )
+           )
         {
-            IsMate = true;
+            if (TurnColor == FigureColors.WHITE)
+            {
+                Winner = GameWinner.Black;
+            } else
+            {
+                Winner = GameWinner.White;
+            }
+            CurrentTurn -= 1;
         }
-            
+        
+        CheckPlayerAbilityToChangeFigure();
+
+        if (Mode == GameMode.Chess20 && (CurrentTurn - 1) % TurnsToNarrowing == 0 && CurrentTurn != 1 && ChangingFigureCell == null)
+        {
+            Winner = ChessBoard.DoNarrowing(NarrowingCount);
+            NarrowingCount += 1;
+        }
+        
         return this;
     }
 
@@ -134,21 +172,54 @@ public class GameRoom
             }
         }
     }
+
+    public void CheckPlayerAbilityToChangeFigure()
+    {
+        var firstYTrigger = 9 - NarrowingCount;
+        var secondYTrigger = NarrowingCount;
+        foreach (var cell in ChessBoard.ChessBoardState)
+        {
+            if (cell.Figure != null && 
+                ((cell.Y == (Mode == GameMode.Chess20 ? secondYTrigger : 0) && cell.Figure.Color == FigureColors.WHITE) || 
+                 (cell.Y == (Mode == GameMode.Chess20 ? firstYTrigger : 7) && cell.Figure.Color == FigureColors.BLACK)) &&
+                cell.Figure.Name == FigureNames.PAWN)
+            {
+                ChangingFigureCell = cell;
+            }
+        }
+    }
+}
+
+public enum GameMode
+{
+    CommonChess,
+    Chess20
+}
+
+public enum GameWinner
+{
+    White,
+    Black,
+    Draw
 }
 
 public class GameRoomDto
 {
     [JsonProperty("chessBoardState")] public List<Cell> ChessBoardState { get; set; }
-    [JsonProperty("turn")] public bool Turn { get; set; }
+    [JsonProperty("isMyTurn")] public bool IsMyTurn { get; set; }
+    [JsonProperty("turn")] public int Turn { get; set; }
+    [JsonProperty("winner")] public GameWinner? Winner { get; set; }
     [JsonProperty("color")] public FigureColors? Color { get; set; }
 
     public GameRoomDto(GameRoom gameRoom, FigureColors playerColor)
     {
-        ChessBoardState = playerColor == FigureColors.WHITE 
-            ? gameRoom.ChessBoard.ChessBoardState 
-            : gameRoom.ChessBoard.GetReversedBoard();
-        
-        Turn = gameRoom.TurnColor == playerColor;
+        ChessBoardState = playerColor == FigureColors.WHITE
+            ? gameRoom.ChessBoard.ChessBoardState
+            : gameRoom.ChessBoard.GetReversedBoard(gameRoom.Mode);
+
+        IsMyTurn = gameRoom.TurnColor == playerColor;
         Color = gameRoom.TurnColor;
+        Winner = gameRoom.Winner;
+        Turn = gameRoom.CurrentTurn;
     }
 }
