@@ -11,8 +11,8 @@ import wR from '/public/alpha/wR.png'
 import bR from '/public/alpha/bR.png'
 import wK from '/public/alpha/wK.png'
 import bK from '/public/alpha/bK.png'
-import wRm from '/public/alpha/wRm.svg'
-import bRm from '/public/alpha/bRm.svg'
+import wRm from '/public/alpha/wRm.png'
+import bRm from '/public/alpha/bRm.png'
 import wall from '/public/alpha/wall.svg'
 
 export const getFigureIcons = () => {

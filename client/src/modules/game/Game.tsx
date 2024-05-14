@@ -12,12 +12,15 @@ import { Modal } from '../../shared/modal/Modal.tsx'
 import { SelectFigure } from './components/select-figure/Select-figure.tsx'
 import { Button } from '../../ui/button/Button.tsx'
 import styles from './game.module.css'
+import { FigureColors } from '../../models/Figure.ts'
+import { ConfirmDraw } from './components/confirm-draw/Confirm-draw.tsx'
+import { UrlModal } from './components/url-modal/Url-modal.tsx'
 
 export const Game = () => {
   const roomId = useParams().roomId!
   const isHost = useLocation().state?.isHost
   const webSocketState = useContext(WebsocketContext)!
-  const windowHeightRef = useRef(window.innerHeight);
+  const windowHeightRef = useRef(window.innerHeight)
   const chessBoardWidthInCellsRef = useRef(8)
   const cellSideSizeRef = useRef(windowHeightRef.current / chessBoardWidthInCellsRef.current)
   const chessBoardRef = useRef<null | HTMLCanvasElement>(null)
@@ -38,6 +41,8 @@ export const Game = () => {
 
   const [newFigureName, setNewFigureName] = useState<null | string>(null)
   const [isSelectFigureModalOpen, setIsSelectFigureModalOpen] = useState(false)
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
+  const [isUrlModalOpen, setIsUrlModalOpen] = useState(isHost as boolean)
   const [message, sendMessage] = useWebsocket({ webSocketState })
 
   useEffect(() => {
@@ -69,6 +74,9 @@ export const Game = () => {
       chessBoardWidthInCellsRef.current = Math.sqrt(message.params!.chessBoardState.length)
       cellSideSizeRef.current = windowHeightRef.current / chessBoardWidthInCellsRef.current
     }
+    if (message && message.type === MessageType.start) {
+      setIsUrlModalOpen(false)
+    }
     if (message && message.type === MessageType.endGame) {
       const winner = message.params!.winner!
       if (winner === GameWinner.white) {
@@ -81,6 +89,13 @@ export const Game = () => {
     }
     if (message && message.type === MessageType.changeFigure) {
       setIsSelectFigureModalOpen(true)
+    }
+    if (message && message.type === MessageType.confirmDraw) {
+      setIsConfirmModalOpen(true)
+    }
+    if (message && message.type === MessageType.leave) {
+      alert('Соперник покинул комнату')
+      leaveRoom()
     }
   }, [message])
 
@@ -121,16 +136,46 @@ export const Game = () => {
     requestRef.current = window.requestAnimationFrame(() => drawAll())
   }
 
+  const giveUp = () => {
+    const giveUpMessage: MessageToServer = { ...moveMessage, type: MessageType.giveUp }
+    if (message!.params!.isMyTurn) {
+      message!.params!.color === FigureColors.white ? giveUpMessage.params = 'white' : giveUpMessage.params = 'black'
+    } else {
+      message!.params!.color === FigureColors.white ? giveUpMessage.params = 'black' : giveUpMessage.params = 'white'
+    }
+    sendMessage(giveUpMessage)
+  }
+
+  const offerDraw = () => {
+    const offerDrawMessage: MessageToServer = { ...moveMessage, type: MessageType.offerDraw }
+    sendMessage(offerDrawMessage)
+  }
+
+  const leaveRoom = () => {
+    const leaveMessage: MessageToServer = { ...moveMessage, type: MessageType.leave }
+    sendMessage(leaveMessage)
+    window.location.href = '/'
+  }
+
   return (
     <div className={styles.container}>
-      <div className={styles.sidebar}>
-        <h2>Ход: {message?.params?.turn}</h2>
-        <br/>
-        <Button onClick={() => console.log('erg')}>Предложить ничью</Button>
-        <br/>
-        <br/>
-        <Button onClick={() => console.log('erg')}>Сдаться</Button>
-      </div>
+      {message?.params?.turn
+        && <div className={styles.sidebar}>
+          <h2>Ход: {message.params.turn}</h2>
+          <br />
+          {message.params.turn > 0
+            && <>
+              <Button onClick={() => offerDraw()}>Предложить ничью</Button>
+              <br />
+              <br />
+              <Button onClick={() => giveUp()}>Сдаться</Button>
+              <br />
+              <br />
+              <Button onClick={() => leaveRoom()}>Выйти</Button>
+            </>
+          }
+        </div>
+      }
       <canvas
         className={styles.chessBoard}
         ref={chessBoardRef}
@@ -161,6 +206,16 @@ export const Game = () => {
             playerColor={message!.params!.color!}
             setIsModalOpen={setIsSelectFigureModalOpen}
             setNewFigureName={setNewFigureName} />
+        </Modal>
+      }
+      {isConfirmModalOpen
+      && <Modal>
+          <ConfirmDraw sendConfirmDrawMessage={sendMessage} setIsModalOpen={setIsConfirmModalOpen} roomId={roomId}/>
+        </Modal>
+      }
+      {isUrlModalOpen
+        && <Modal>
+          <UrlModal url={window.location.href}/>
         </Modal>
       }
     </div>

@@ -13,6 +13,9 @@ export enum MessageType {
   changeFigure,
   restart,
   error,
+  giveUp,
+  offerDraw,
+  confirmDraw
 }
 
 export enum GameWinner

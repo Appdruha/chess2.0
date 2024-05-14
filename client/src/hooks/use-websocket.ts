@@ -68,9 +68,15 @@ export const useWebsocket = (
       ) {
         setLastMessage({ params, roomId, type })
       }
+      if (type === MessageType.confirmDraw) {
+        setLastMessage({...lastMessage, type: MessageType.confirmDraw} as MessageFromServer)
+      }
+      if (type === MessageType.leave) {
+        setLastMessage({...lastMessage, type: MessageType.leave} as MessageFromServer)
+      }
       if (type === MessageType.endGame) {
         setLastMessage({ params, roomId, type })
-        if (params?.turn) {
+        if (params!.isMyTurn) {
           setTimeout(() => sendMessage({ params: '', type: MessageType.restart, roomId }), 8000)
         }
       }

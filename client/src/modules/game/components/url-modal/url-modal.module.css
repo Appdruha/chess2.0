@@ -1,0 +1,10 @@
+.container {
+    width: 100%;
+    height: 160px;
+    text-align: center;
+}
+
+.heading {
+    bottom: 20px;
+    color: #501b02;
+}
