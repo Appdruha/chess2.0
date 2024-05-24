@@ -10,6 +10,7 @@ public class Controller
         {
             mode = GameMode.Chess20;
         }
+
         var roomId = Guid.NewGuid().ToString();
         Db.CreateRoom(roomId, client, mode);
         return CreateJsonMessage(MessageType.Create, null, roomId);
@@ -36,13 +37,10 @@ public class Controller
     public static (List<Player>, (string firstMessage, string secondMessage)) Start(string roomId)
     {
         var gameRoom = Db.StartGame(roomId);
-        var firstGameRoomData = new GameRoomDto(gameRoom, FigureColors.WHITE);
-        var secondGameRoomData = new GameRoomDto(gameRoom, FigureColors.BLACK);
-        return (gameRoom.Players,
-            (CreateJsonMessage(MessageType.Start, firstGameRoomData, roomId),
-                CreateJsonMessage(MessageType.Start, secondGameRoomData, roomId)));
+        var (firstGameRoomData, secondGameRoomData) = CreateGameRoomDtos(gameRoom);
+        return CreateOutputForBroadcast(gameRoom, roomId, MessageType.Start, firstGameRoomData, secondGameRoomData);
     }
-    
+
     public static (Player player, string message)? Leave(string roomId, IWebSocketConnection client)
     {
         var gameRoom = Db.Leave(roomId, client);
@@ -57,13 +55,10 @@ public class Controller
     public static (List<Player>, (string firstMessage, string secondMessage)) Restart(string roomId)
     {
         var gameRoom = Db.RestartGame(roomId);
-        var firstGameRoomData = new GameRoomDto(gameRoom, FigureColors.WHITE);
-        var secondGameRoomData = new GameRoomDto(gameRoom, FigureColors.BLACK);
-        return (gameRoom.Players,
-            (CreateJsonMessage(MessageType.Start, firstGameRoomData, roomId),
-                CreateJsonMessage(MessageType.Start, secondGameRoomData, roomId)));
+        var (firstGameRoomData, secondGameRoomData) = CreateGameRoomDtos(gameRoom);
+        return CreateOutputForBroadcast(gameRoom, roomId, MessageType.Start, firstGameRoomData, secondGameRoomData);
     }
-    
+
     public static (List<Player>, (string firstMessage, string secondMessage)) GiveUp(string roomId, string playerColor)
     {
         var winner = GameWinner.White;
@@ -71,24 +66,19 @@ public class Controller
         {
             winner = GameWinner.Black;
         }
+
         var gameRoom = Db.GiveUp(roomId, winner);
-        var firstGameRoomData = new GameRoomDto(gameRoom, FigureColors.WHITE);
-        var secondGameRoomData = new GameRoomDto(gameRoom, FigureColors.BLACK);
-        return (gameRoom.Players,
-            (CreateJsonMessage(MessageType.EndGame, firstGameRoomData, roomId),
-                CreateJsonMessage(MessageType.EndGame, secondGameRoomData, roomId)));
+        var (firstGameRoomData, secondGameRoomData) = CreateGameRoomDtos(gameRoom);
+        return CreateOutputForBroadcast(gameRoom, roomId, MessageType.EndGame, firstGameRoomData, secondGameRoomData);
     }
-    
+
     public static (List<Player>, (string firstMessage, string secondMessage)) ConfirmDraw(string roomId)
     {
         var gameRoom = Db.ConfirmDraw(roomId);
-        var firstGameRoomData = new GameRoomDto(gameRoom, FigureColors.WHITE);
-        var secondGameRoomData = new GameRoomDto(gameRoom, FigureColors.BLACK);
-        return (gameRoom.Players,
-            (CreateJsonMessage(MessageType.EndGame, firstGameRoomData, roomId),
-                CreateJsonMessage(MessageType.EndGame, secondGameRoomData, roomId)));
+        var (firstGameRoomData, secondGameRoomData) = CreateGameRoomDtos(gameRoom);
+        return CreateOutputForBroadcast(gameRoom, roomId, MessageType.EndGame, firstGameRoomData, secondGameRoomData);
     }
-    
+
     public static (Player player, string message)? OfferDraw(string roomId, IWebSocketConnection client)
     {
         var players = Db.GetRoomState(roomId).Players;
@@ -102,23 +92,19 @@ public class Controller
 
         return null;
     }
-    
-    public static (List<Player>, (string firstMessage, string secondMessage)) ChangeFigure(string roomId, string figureName)
+
+    public static (List<Player>, (string firstMessage, string secondMessage)) ChangeFigure(string roomId,
+        string figureName)
     {
         var gameRoom = Db.ChangeFigure(roomId, figureName.Trim().ToLower());
-        var firstGameRoomData = new GameRoomDto(gameRoom, FigureColors.WHITE);
-        var secondGameRoomData = new GameRoomDto(gameRoom, FigureColors.BLACK);
-        
+        var (firstGameRoomData, secondGameRoomData) = CreateGameRoomDtos(gameRoom);
+
         if (gameRoom.Winner != null)
         {
-            return (gameRoom.Players,
-                (CreateJsonMessage(MessageType.EndGame, firstGameRoomData, roomId),
-                    CreateJsonMessage(MessageType.EndGame, secondGameRoomData, roomId)));
+            return CreateOutputForBroadcast(gameRoom, roomId, MessageType.EndGame, firstGameRoomData, secondGameRoomData);
         }
-        
-        return (gameRoom.Players,
-            (CreateJsonMessage(MessageType.Start, firstGameRoomData, roomId),
-                CreateJsonMessage(MessageType.Start, secondGameRoomData, roomId)));
+
+        return CreateOutputForBroadcast(gameRoom, roomId, MessageType.Start, firstGameRoomData, secondGameRoomData);
     }
 
     public static (List<Player>, (string? firstMessage, string? secondMessage)) Move(string roomId, string moveParams)
@@ -133,29 +119,41 @@ public class Controller
                 return (gameRoom.Players,
                     (CreateJsonMessage(MessageType.ChangeFigure, null, roomId), null));
             }
-            
-            return (gameRoom.Players, 
+
+            return (gameRoom.Players,
                 (null, CreateJsonMessage(MessageType.ChangeFigure, null, roomId)));
         }
 
-        var firstGameRoomData = new GameRoomDto(gameRoom, FigureColors.WHITE);
-        var secondGameRoomData = new GameRoomDto(gameRoom, FigureColors.BLACK);
+        var (firstGameRoomData, secondGameRoomData) = CreateGameRoomDtos(gameRoom);
 
         if (gameRoom.Winner != null)
         {
-            return (gameRoom.Players,
-                (CreateJsonMessage(MessageType.EndGame, firstGameRoomData, roomId),
-                    CreateJsonMessage(MessageType.EndGame, secondGameRoomData, roomId)));
+            return CreateOutputForBroadcast(gameRoom, roomId, MessageType.EndGame, firstGameRoomData, secondGameRoomData);
         }
 
-        return (gameRoom.Players,
-            (CreateJsonMessage(MessageType.NextTurn, firstGameRoomData, roomId),
-                CreateJsonMessage(MessageType.NextTurn, secondGameRoomData, roomId)));
+        return CreateOutputForBroadcast(gameRoom, roomId, MessageType.NextTurn, firstGameRoomData, secondGameRoomData);
     }
 
     private static string CreateJsonMessage(MessageType type, GameRoomDto? gameRoomDto, string roomId)
     {
         var message = new MessageToClient(type, gameRoomDto, roomId);
         return JsonConvert.SerializeObject(message);
+    }
+
+    private static (GameRoomDto firstGameRoomData, GameRoomDto secondGameRoomData) CreateGameRoomDtos(
+        GameRoom gameRoomState)
+    {
+        var firstGameRoomData = new GameRoomDto(gameRoomState, FigureColors.WHITE);
+        var secondGameRoomData = new GameRoomDto(gameRoomState, FigureColors.BLACK);
+        return (firstGameRoomData, secondGameRoomData);
+    }
+
+    private static (List<Player>, (string firstMessage, string secondMessage)) CreateOutputForBroadcast(
+        GameRoom gameRoomState, string roomId, MessageType messageType, GameRoomDto firstGameRoomData,
+        GameRoomDto secondGameRoomData)
+    {
+        return (gameRoomState.Players,
+            (CreateJsonMessage(messageType, firstGameRoomData, roomId),
+                CreateJsonMessage(messageType, secondGameRoomData, roomId)));
     }
 }

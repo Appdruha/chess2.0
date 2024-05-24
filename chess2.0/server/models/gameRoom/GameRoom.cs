@@ -90,7 +90,7 @@ public class GameRoom
             }
         }
 
-        if (Mode == GameMode.Chess20)
+        if (Mode == GameMode.Chess20 && (CurrentTurn - 1) % TurnsToNarrowing == 0 && CurrentTurn != 1 && ChangingFigureCell == null)
         {
             Winner = ChessBoard.DoNarrowing(NarrowingCount);
             NarrowingCount += 1;
@@ -117,16 +117,15 @@ public class GameRoom
 
         if (toggleTurn)
         {
+            TurnColor = isWhiteTurn ? FigureColors.BLACK : FigureColors.WHITE;
+            CurrentTurn += 1;
             var whiteKing = (King?)Players[0].KingCell.Figure;
             var blackKing = (King?)Players[1].KingCell.Figure;
             if (whiteKing != null && blackKing != null)
             {
-                whiteKing.IsMyTurn = !whiteKing.IsMyTurn;
-                blackKing.IsMyTurn = !blackKing.IsMyTurn;
+                whiteKing.IsMyTurn = TurnColor == FigureColors.WHITE;
+                blackKing.IsMyTurn = TurnColor == FigureColors.BLACK;
             }
-
-            TurnColor = isWhiteTurn ? FigureColors.BLACK : FigureColors.WHITE;
-            CurrentTurn += 1;
         }
 
         if (ChessBoard.CheckIsMate(
