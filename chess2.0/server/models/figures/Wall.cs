@@ -1,3 +1,5 @@
+namespace chess2._0.models.figures;
+
 public class Wall : Figure
 {
     public Wall(Cell cell)

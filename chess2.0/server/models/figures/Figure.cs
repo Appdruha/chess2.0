@@ -1,5 +1,7 @@
 using Newtonsoft.Json;
 
+namespace chess2._0.models.figures;
+
 public enum FigureColors
 {
     BLACK,

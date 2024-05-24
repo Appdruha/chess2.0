@@ -1,3 +1,7 @@
+using chess2._0.models.figures;
+
+namespace chess2._0.models.gameRoom;
+
 public class ChessBoard
 {
     public List<Cell> ChessBoardState;

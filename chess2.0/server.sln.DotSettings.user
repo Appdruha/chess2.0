@@ -1,0 +1,29 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=3e58582b_002Dc0db_002D4fb1_002Dbe87_002D77d2aca20f61/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from UnitTest1.cs" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;ProjectFile&gt;A3E54E8F-3678-4BB7-AFB8-4BC03E97B607/f:UnitTest1.cs&lt;/ProjectFile&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=57429ec3_002D5a26_002D4508_002Da11f_002Dc663e3d2a6c5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ChessBoardTests #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::A3E54E8F-3678-4BB7-AFB8-4BC03E97B607::net7.0::Tests.ChessBoardTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=58ac08c0_002D642c_002D4adb_002Db20b_002D4b340ca53e9c/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ChessBoardTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::A3E54E8F-3678-4BB7-AFB8-4BC03E97B607::net7.0::Tests.ChessBoardTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=a744250f_002Dbfeb_002D44ef_002D9298_002D7ca865e077f6/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ChessBoardTests #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::A3E54E8F-3678-4BB7-AFB8-4BC03E97B607::net7.0::Tests.ChessBoardTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=c76aed78_002D1c78_002D468a_002D83cd_002D1b5567eae8e6/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ChessBoardTests #4" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::A3E54E8F-3678-4BB7-AFB8-4BC03E97B607::net7.0::Tests.ChessBoardTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fea3a1c2_002D0ba2_002D4a48_002Dbc2b_002D1f4d43e8f29b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ChessBoard_Returns_100_Cells" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::A3E54E8F-3678-4BB7-AFB8-4BC03E97B607::net7.0::Tests.ChessBoardTests.ChessBoard_Returns_100_Cells&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

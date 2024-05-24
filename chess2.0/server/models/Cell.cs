@@ -1,4 +1,7 @@
+using chess2._0.models.figures;
 using Newtonsoft.Json;
+
+namespace chess2._0.models;
 
 public enum CellCollors
 {

@@ -1,3 +1,6 @@
+using chess2._0.controller;
+using chess2._0.models;
+using chess2._0.models.figures;
 using Fleck;
 using Newtonsoft.Json;
 

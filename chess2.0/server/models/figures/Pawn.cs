@@ -1,3 +1,5 @@
+namespace chess2._0.models.figures;
+
 public class Pawn : Figure
 {
     public bool IsFirstStep { get; set; } = true;

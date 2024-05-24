@@ -1,3 +1,5 @@
+namespace chess2._0.models.figures;
+
 public class KingAttacker
 {
     public Figure Figure { get; set; }

@@ -1,5 +1,8 @@
+using chess2._0.models.figures;
 using Fleck;
 using Newtonsoft.Json;
+
+namespace chess2._0.models.gameRoom;
 
 public class GameRoom
 {

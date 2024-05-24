@@ -1,3 +1,5 @@
+namespace chess2._0.models.figures;
+
 public class Ram : Figure
 {
     public Ram(FigureColors color, Cell cell) : base(color, cell, FigureNames.RAM) {}

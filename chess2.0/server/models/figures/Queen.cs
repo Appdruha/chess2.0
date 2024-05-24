@@ -1,3 +1,5 @@
+namespace chess2._0.models.figures;
+
 public class Queen : Figure
 {
     public Queen(FigureColors color, Cell cell) 

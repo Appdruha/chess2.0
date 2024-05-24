@@ -1,4 +1,7 @@
+using chess2._0.models.gameRoom;
 using Newtonsoft.Json;
+
+namespace chess2._0.models;
 
 public class MessageToClient
 {

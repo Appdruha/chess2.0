@@ -1,5 +1,10 @@
+using chess2._0.models;
+using chess2._0.models.figures;
+using chess2._0.models.gameRoom;
 using Fleck;
 using Newtonsoft.Json;
+
+namespace chess2._0.controller;
 
 public class Controller
 {
