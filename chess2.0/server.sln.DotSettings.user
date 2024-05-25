@@ -3,5 +3,16 @@
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;NUnit3x::A3E54E8F-3678-4BB7-AFB8-4BC03E97B607::net7.0::Tests.ChessBoardTestsForCommonChess&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;NUnit3x::A3E54E8F-3678-4BB7-AFB8-4BC03E97B607::net7.0::Tests.ChessBoardTestsForChess20&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::A3E54E8F-3678-4BB7-AFB8-4BC03E97B607::net7.0::Tests.Figures_tests.Move_Pawn_Return_null_true_Tuple&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::A3E54E8F-3678-4BB7-AFB8-4BC03E97B607::net7.0::Tests.Figures_tests.Move_Pawn_Return_null_false_Tuple&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::A3E54E8F-3678-4BB7-AFB8-4BC03E97B607::net7.0::Tests.Figures_tests.Move_Pawn_Return_null_false_Tuple_After_Second_Two_Cell_Move&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::A3E54E8F-3678-4BB7-AFB8-4BC03E97B607::net7.0::Tests.Figures_tests.Move_Pawn_Return_null_true_Tuple_After_Hit&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::A3E54E8F-3678-4BB7-AFB8-4BC03E97B607::net7.0::Tests.Figures_tests.Move_King_Return_cell_tue_Tuple&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::A3E54E8F-3678-4BB7-AFB8-4BC03E97B607::net7.0::Tests.Figures_tests.Move_King_Return_null_false_Tuple&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::A3E54E8F-3678-4BB7-AFB8-4BC03E97B607::net7.0::Tests.Figures_tests.Castling_Return_cell_true_Tuple_And_Move_Rook&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::A3E54E8F-3678-4BB7-AFB8-4BC03E97B607::net7.0::Tests.Figures_tests.Move_King_Return_null_false_Because_Target_Cell_Attacked&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::A3E54E8F-3678-4BB7-AFB8-4BC03E97B607::net7.0::Tests.Figures_tests.Move_Bishop_Return_null_true_Tuple&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::A3E54E8F-3678-4BB7-AFB8-4BC03E97B607::net7.0::Tests.Figures_tests.Move_Bishop_Return_null_false_Tuple&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::A3E54E8F-3678-4BB7-AFB8-4BC03E97B607::net7.0::Tests.Figures_tests.White_Figure_Can_Move_Only_To_Prevent_Check&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
