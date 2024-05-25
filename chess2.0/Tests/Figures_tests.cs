@@ -123,6 +123,8 @@ public class FiguresTestsForCommonChess
     }
 
     [TestCase("B4")]
+    [TestCase("J3")]
+    [TestCase("B2")]
     [TestCase("C4")]
     [TestCase("D2")]
     public void Move_King_Return_null_false_Tuple(string targetCellId)
@@ -163,6 +165,7 @@ public class FiguresTestsForCommonChess
         }
     }
 
+
     [TestCase("G1")]
     [TestCase("D1")]
     public void Move_King_Return_null_false_Because_Target_Cell_Attacked(string targetCellId)
@@ -201,6 +204,8 @@ public class FiguresTestsForCommonChess
     }
     
     [TestCase("A2")]
+    [TestCase("J3")]
+    [TestCase("B2")]
     [TestCase("C2")]
     [TestCase("B1")]
     [TestCase("B3")]
@@ -211,6 +216,87 @@ public class FiguresTestsForCommonChess
         var result = _chessBoard.MoveFigure(String.Format("B2 {0}", targetCellId), null, _cellForKing);
         Assert.That(result.Item1, Is.EqualTo(null), "Unexpected new king cell after move");
         Assert.That(result.Item2, Is.EqualTo(false), "Bishop move should return false");
+    }
+
+    // ----Knight Tests
+    [TestCase("D3")]
+    [TestCase("D1")]
+    [TestCase("A4")]
+    public void Move_Knight_Return_null_true_Tuple(string targetCellId)
+    {
+        _cellForFigure.SetFigure(new Knight(FigureColors.WHITE, _cellForFigure));
+        var result = _chessBoard.MoveFigure(String.Format("B2 {0}", targetCellId), null, _cellForKing);
+        Assert.That(result.Item1, Is.EqualTo(null), "Unexpected new king cell after move");
+        Assert.That(result.Item2, Is.EqualTo(true), "Knight move should return true");
+    }
+
+    [TestCase("E3")]
+    [TestCase("J3")]
+    [TestCase("A1")]
+    [TestCase("B2")]
+    [TestCase("E6")]
+    public void Move_Knight_Return_null_false_Tuple(string targetCellId)
+    {
+        _cellForFigure.SetFigure(new Knight(FigureColors.WHITE, _cellForFigure));
+        var result = _chessBoard.MoveFigure(String.Format("B2 {0}", targetCellId), null, _cellForKing);
+        Assert.That(result.Item1, Is.EqualTo(null), "Unexpected new king cell after move");
+        Assert.That(result.Item2, Is.EqualTo(false), "Knight move should return false");
+    }
+
+    // ----Rook Tests
+    [TestCase("B1")]
+    [TestCase("B8")]
+    [TestCase("B5")]
+    [TestCase("A2")]
+    [TestCase("E2")]
+    [TestCase("H2")]
+    public void Move_Rook_Return_null_true_Tuple(string targetCellId)
+    {
+        _cellForFigure.SetFigure(new Rook(FigureColors.WHITE, _cellForFigure));
+        var result = _chessBoard.MoveFigure(String.Format("B2 {0}", targetCellId), null, _cellForKing);
+        Assert.That(result.Item1, Is.EqualTo(null), "Unexpected new king cell after move");
+        Assert.That(result.Item2, Is.EqualTo(true), "Rook move should return true");
+    }
+
+    [TestCase("A1")]
+    [TestCase("J3")]
+    [TestCase("B2")]
+    [TestCase("C4")]
+    public void Move_Rook_Return_null_false_Tuple(string targetCellId)
+    {
+        _cellForFigure.SetFigure(new Rook(FigureColors.WHITE, _cellForFigure));
+        var result = _chessBoard.MoveFigure(String.Format("B2 {0}", targetCellId), null, _cellForKing);
+        Assert.That(result.Item1, Is.EqualTo(null), "Unexpected new king cell after move");
+        Assert.That(result.Item2, Is.EqualTo(false), "Rook move should return false");
+    }
+
+    // ----Queen Tests
+    [TestCase("B1")]
+    [TestCase("A1")]
+    [TestCase("B5")]
+    [TestCase("A2")]
+    [TestCase("E2")]
+    [TestCase("H2")]
+    [TestCase("E5")]
+    [TestCase("H8")]
+    public void Move_Queen_Return_null_true_Tuple(string targetCellId)
+    {
+        _cellForFigure.SetFigure(new Queen(FigureColors.WHITE, _cellForFigure));
+        var result = _chessBoard.MoveFigure(String.Format("B2 {0}", targetCellId), null, _cellForKing);
+        Assert.That(result.Item1, Is.EqualTo(null), "Unexpected new king cell after move");
+        Assert.That(result.Item2, Is.EqualTo(true), "Queen move should return true");
+    }
+
+    [TestCase("C4")]
+    [TestCase("J3")]
+    [TestCase("B2")]
+    [TestCase("E8")]
+    public void Move_Queen_Return_null_false_Tuple(string targetCellId)
+    {
+        _cellForFigure.SetFigure(new Queen(FigureColors.WHITE, _cellForFigure));
+        var result = _chessBoard.MoveFigure(String.Format("B2 {0}", targetCellId), null, _cellForKing);
+        Assert.That(result.Item1, Is.EqualTo(null), "Unexpected new king cell after move");
+        Assert.That(result.Item2, Is.EqualTo(false), "Queen move should return false");
     }
 }
 
