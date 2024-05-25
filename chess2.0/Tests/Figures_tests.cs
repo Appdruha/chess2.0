@@ -4,7 +4,8 @@ using chess2._0.models.gameRoom;
 
 namespace Tests;
 
-public class Figures_tests
+[TestFixture]
+public class FiguresTestsForCommonChess
 {
     private ChessBoard _chessBoard;
     private Cell _cellForFigure;
@@ -210,5 +211,83 @@ public class Figures_tests
         var result = _chessBoard.MoveFigure(String.Format("B2 {0}", targetCellId), null, _cellForKing);
         Assert.That(result.Item1, Is.EqualTo(null), "Unexpected new king cell after move");
         Assert.That(result.Item2, Is.EqualTo(false), "Bishop move should return false");
+    }
+}
+
+[TestFixture]
+public class FiguresTestsForChess20
+{
+    private ChessBoard _chessBoard;
+    private Cell _cellForFigure;
+    private Cell _cellForKing;
+
+    [SetUp]
+    public void SetUp()
+    {
+        _chessBoard = new ChessBoard(GameMode.Chess20);
+        _cellForFigure = _chessBoard.ChessBoardState.Find(cell => cell.Id == "B2")!;
+        _cellForKing = _chessBoard.ChessBoardState.Find(cell => cell.Id == "E1")!;
+        _cellForKing.SetFigure(new King(FigureColors.WHITE, _cellForKing));
+    }
+    
+    // ----Figures with walls Tests
+    [TestCase("B5")]
+    [TestCase("B4")]
+    public void Move_Figure_Return_null_false_Tuple(string targetCellId)
+    {
+        _cellForFigure.SetFigure(new Queen(FigureColors.WHITE, _cellForFigure));
+        var wallCell = _chessBoard.ChessBoardState.Find(cell => cell.Id == "B4")!;
+        wallCell.SetFigure(new Wall(wallCell));
+        var result = _chessBoard.MoveFigure(String.Format("B2 {0}", targetCellId), null, _cellForKing);
+        Assert.That(result.Item1, Is.EqualTo(null), "Unexpected new king cell after move");
+        Assert.That(result.Item2, Is.EqualTo(false), "Figure move should return false");
+    }
+    
+    // ----Ram Tests
+    [TestCase("A2")]
+    [TestCase("C2")]
+    [TestCase("B3")]
+    [TestCase("B5")]
+    public void Move_Ram_Return_null_true_Tuple(string targetCellId)
+    {
+        _cellForFigure.SetFigure(new Ram(FigureColors.WHITE, _cellForFigure));
+        Cell? wallCell = null;
+
+        if (targetCellId == "B5")
+        {
+            wallCell = _chessBoard.ChessBoardState.Find(cell => cell.Id == targetCellId)!;
+            wallCell.SetFigure(new Wall(wallCell));
+            
+        }
+        
+        var result = _chessBoard.MoveFigure(String.Format("B2 {0}", targetCellId), null, _cellForKing);
+
+        if (targetCellId == "B5")
+        {
+            if (wallCell!.Figure == null)
+            {
+                Assert.That(wallCell.Figure, Is.Not.EqualTo(null), "On wall cell should be Pawn");
+            }
+            else
+            {
+                Assert.That(wallCell.Figure.Name, Is.EqualTo(FigureNames.PAWN), "On wall cell should be Pawn");
+            }
+        }
+        
+        Assert.That(result.Item1, Is.EqualTo(null), "Unexpected new king cell after move");
+        Assert.That(result.Item2, Is.EqualTo(true), "Ram move should return true");
+    }
+    
+    [TestCase("A1")]
+    [TestCase("B1")]
+    [TestCase("C1")]
+    [TestCase("A3")]
+    [TestCase("C3")]
+    public void Move_Ram_Return_null_false_Tuple(string targetCellId)
+    {
+        _cellForFigure.SetFigure(new Ram(FigureColors.WHITE, _cellForFigure));
+        var result = _chessBoard.MoveFigure(String.Format("B2 {0}", targetCellId), null, _cellForKing);
+        Assert.That(result.Item1, Is.EqualTo(null), "Unexpected new king cell after move");
+        Assert.That(result.Item2, Is.EqualTo(false), "Ram move should return false");
     }
 }
