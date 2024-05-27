@@ -52,8 +52,6 @@ export const Game = () => {
       sendMessage({ roomId, type: MessageType.start, params: '' })
     }
     if (chessBoardRef.current) {
-      const { x, y } = chessBoardRef.current.getBoundingClientRect()
-      chessBoardPositionRef.current = { x, y }
       ctxRef.current = chessBoardRef.current.getContext('2d')
       chessBoardRef.current.width = windowHeightRef.current
       chessBoardRef.current.height = windowHeightRef.current
@@ -73,6 +71,10 @@ export const Game = () => {
     if (message && (message.type === MessageType.start || message.type === MessageType.init)) {
       chessBoardWidthInCellsRef.current = Math.sqrt(message.params!.chessBoardState.length)
       cellSideSizeRef.current = windowHeightRef.current / chessBoardWidthInCellsRef.current
+      if (chessBoardRef.current) {
+        const { x, y } = chessBoardRef.current.getBoundingClientRect()
+        chessBoardPositionRef.current = { x, y }
+      }
     }
     if (message && message.type === MessageType.start) {
       setIsUrlModalOpen(false)
@@ -159,7 +161,7 @@ export const Game = () => {
 
   return (
     <div className={styles.container}>
-      {message?.params?.turn
+      {message?.params?.turn && message?.params?.turn !== 0
         && <div className={styles.sidebar}>
           <h2>Ход: {message.params.turn}</h2>
           <br />
