@@ -4,26 +4,14 @@
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <RootNamespace>chess2._0</RootNamespace>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <RootNamespace>WebApplication1</RootNamespace>
     </PropertyGroup>
 
-
     <ItemGroup>
-      <PackageReference Include="Fleck" Version="1.2.0" />
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-
-
-
-
-
-
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
-
-
-
-
-
-
 
 </Project>
