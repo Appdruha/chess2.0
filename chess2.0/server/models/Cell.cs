@@ -67,7 +67,6 @@ public class Cell
         
         for (int yPos = min + 1; yPos < max; yPos += 1)
         {
-            Console.WriteLine(yPos);
             Cell? cell = cells.Find(c => c.X == target.X && c.Y == yPos);
             if (cell == null || cell.Figure != null)
             {

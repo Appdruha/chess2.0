@@ -11,14 +11,12 @@ server.Start(ws =>
     ws.OnOpen = () =>
     {
         var m = new MessageToClient(MessageType.Create, null, "");
-        Console.WriteLine(JsonConvert.SerializeObject(m));
         ws.Send("Websocket Connection open");
     };
     ws.OnMessage = messageString =>
     {
         try
         {
-            Console.WriteLine(messageString);
             var message = JsonConvert.DeserializeObject<MessageFromClient>(messageString);
             if (message == null)
             {
