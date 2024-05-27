@@ -1,0 +1,9 @@
+C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\bin\Debug\net7.0\publish\server.exe
+C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\bin\Debug\net7.0\publish\appsettings.Development.json
+C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\bin\Debug\net7.0\publish\appsettings.json
+C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\bin\Debug\net7.0\publish\server.dll
+C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\bin\Debug\net7.0\publish\server.deps.json
+C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\bin\Debug\net7.0\publish\server.runtimeconfig.json
+C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\bin\Debug\net7.0\publish\server.pdb
+C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\bin\Debug\net7.0\publish\Fleck.dll
+C:\Users\Андрей\Desktop\chess2.0\chess2.0\server\bin\Debug\net7.0\publish\Newtonsoft.Json.dll

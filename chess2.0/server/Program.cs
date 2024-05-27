@@ -4,7 +4,7 @@ using chess2._0.models.figures;
 using Fleck;
 using Newtonsoft.Json;
 
-var server = new WebSocketServer("ws://0.0.0.0:8181");
+var server = new WebSocketServer(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production" ? "wss://0.0.0.0:8181" : "ws://0.0.0.0:8181");
 
 server.Start(ws =>
 {
