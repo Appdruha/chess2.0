@@ -8,3 +8,31 @@
     bottom: 20px;
     color: #501b02;
 }
+
+.input {
+    margin-top: 12px;
+    padding: 6px;
+    width: 240px;
+    height: 48px;
+    border: none;
+    outline: 2px solid #0f620f;
+    border-radius: 8px;
+    color: #501b02;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 32px;
+}
+
+.copy {
+    padding: 6px;
+    margin: 16px auto;
+    width: 160px;
+    height: 36px;
+    background: #be7e1e;
+    border: 1px solid #72340d;
+    border-radius: 8px;
+    color: #eee3cf;
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+}
