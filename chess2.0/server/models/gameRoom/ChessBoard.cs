@@ -199,7 +199,9 @@ public class ChessBoard
 
             if (toCell.Figure != null && figure.Name == FigureNames.RAM)
             {
-                toCell.SetFigure(new Pawn(figure.Color, toCell));
+                var pawn = new Pawn(figure.Color, toCell);
+                pawn.IsFirstStep = false;
+                toCell.SetFigure(pawn);
             }
             else
             {
